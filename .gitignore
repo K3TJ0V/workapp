@@ -1,5 +1,6 @@
 venv
 docker-compose.yaml
+db.sqlite3
 
 # Logs
 logs
