@@ -1,6 +1,8 @@
 venv
 docker-compose.yaml
 db.sqlite3
+migrations
+a.out
 
 # Logs
 logs
