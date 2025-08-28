@@ -9,15 +9,15 @@ class ExSerializer(serializers.ModelSerializer):
 
 
 class WorkoutItemSerializer(serializers.ModelSerializer):
-    exercise = serializers.StringRelatedField()
+    exercise = serializers.PrimaryKeyRelatedField(queryset=Exercise.objects.all())
+    workout = serializers.PrimaryKeyRelatedField(queryset=Workout.objects.all())
     class Meta:
         model = WorkoutItem
-        fields = ['id', 'sets', 'reps', 'time', 'tempo', 'rir', 'exercise']
+        fields = ['id', 'sets', 'reps', 'time', 'tempo', 'rir', 'exercise', 'workout']
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
-    description = serializers.CharField(max_length=255, source='descriptive_name')
-    workout_items = WorkoutItemSerializer(many=True)
+    workout_items = WorkoutItemSerializer(many=True, allow_null=True)
     class Meta:
         model = Workout
-        fields = ['id', 'description', 'workout_items']
+        fields = ['id', 'descriptive_name', 'workout_items']

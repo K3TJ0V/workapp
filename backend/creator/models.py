@@ -23,4 +23,4 @@ class WorkoutItem(models.Model):
     tempo = models.CharField(max_length=4, null=True)
     rir = models.CharField(max_length=3, null=True)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name='workout_items', null=True)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name='workout_items')
