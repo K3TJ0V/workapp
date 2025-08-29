@@ -60,10 +60,10 @@ class WorkoutAdd(APIView):
         serializer = WorkoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class WorkoutAddShowUpdateDelete(APIView):
+class WorkoutShowUpdateDelete(APIView):
     def get(self, request, pk):
         workout = get_object_or_404(Workout, pk=pk)
         serializer = WorkoutSerializer(workout)
@@ -93,3 +93,16 @@ class WorkItemAdd(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class WorkItemUpdateDelete(APIView):
+    def put(self, request, pk):
+        work_item_data = get_object_or_404(WorkoutItem, pk=pk)
+        serializer = WorkoutItemSerializer(work_item_data, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def delete(self, request, pk):
+        work_item = WorkoutItem.objects.filter(pk=pk)
+        work_item.delete()
+        return Response({"message": "Item deleted"}, status=status.HTTP_204_NO_CONTENT)

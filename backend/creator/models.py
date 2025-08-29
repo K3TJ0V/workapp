@@ -17,6 +17,7 @@ class Workout(models.Model):
 
 
 class WorkoutItem(models.Model):
+    weight = models.PositiveIntegerField(null=True)
     sets = models.PositiveIntegerField()
     reps = models.PositiveIntegerField(null=True)
     time = models.PositiveIntegerField(null=True)

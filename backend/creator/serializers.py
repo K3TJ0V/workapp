@@ -1,3 +1,4 @@
+from django.core.validators import validate_unicode_slug
 from rest_framework import serializers
 from .models import WorkoutItem, Exercise, Workout
 
@@ -13,11 +14,11 @@ class WorkoutItemSerializer(serializers.ModelSerializer):
     workout = serializers.PrimaryKeyRelatedField(queryset=Workout.objects.all())
     class Meta:
         model = WorkoutItem
-        fields = ['id', 'sets', 'reps', 'time', 'tempo', 'rir', 'exercise', 'workout']
+        fields = ['id', 'weight', 'sets', 'reps', 'time', 'tempo', 'rir', 'exercise', 'workout']
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
-    workout_items = WorkoutItemSerializer(many=True, allow_null=True)
+    workout_items = WorkoutItemSerializer(many=True, allow_null=True, read_only=True)
     class Meta:
         model = Workout
         fields = ['id', 'descriptive_name', 'workout_items']
