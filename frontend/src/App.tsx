@@ -1,8 +1,10 @@
 import './styles/App.scss'
 import Navbar from './Navbar'
 import ExerciseBase from './ExerciseBase'
+import Workouts from './Workouts'
+import Home from './Home'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-
+ 
 function App(){
 
     return(
@@ -10,7 +12,13 @@ function App(){
             <Navbar/>
             <main className='main'>
                 <Routes>
+                    <Route path='/' element={ <Home/>}/>
+                </Routes>
+                <Routes>
                     <Route path='/ex-base' element={ <ExerciseBase/>}/>
+                </Routes>
+                <Routes>
+                    <Route path='/workouts' element={<Workouts/>}/>
                 </Routes>
             </main>
         </Router>

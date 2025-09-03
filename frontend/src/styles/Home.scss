@@ -1,0 +1,48 @@
+.main{
+    &__homeFlex{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        &::before, &::after{
+            content: "";
+            position: absolute;
+            left: 15%;
+            width: 150px;
+            height: 150px;
+            transform: rotate(-45deg);
+            background: url(../assets/barbell.svg) no-repeat;
+            background-size: contain;
+        }
+        &::after{
+            transform: rotate(45deg);
+            left: 72%;
+        }
+    }
+    &__h2{
+        text-align: center;
+    }
+    &__description{
+        margin: 0;
+    }
+    &__list{ 
+        width: 650px;
+        &--point{
+            width: 600px;
+            list-style: none;
+            padding-left: 30px;
+            position: relative;
+            &::before{
+                content: "";
+                position: absolute;
+                left: 0;
+                transform: translate(0, 15%);
+                width: 16px;
+                height: 16px;
+                background: url("../assets/bicep-icon.svg");
+                background-size: contain;
+            }
+        }
+    }
+}
