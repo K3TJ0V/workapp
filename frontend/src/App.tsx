@@ -12,12 +12,8 @@ function App(){
             <Navbar/>
             <main className='main'>
                 <Routes>
-                    <Route path='/' element={ <Home/>}/>
-                </Routes>
-                <Routes>
-                    <Route path='/ex-base' element={ <ExerciseBase/>}/>
-                </Routes>
-                <Routes>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/ex-base' element={<ExerciseBase/>}/>
                     <Route path='/workouts' element={<Workouts/>}/>
                 </Routes>
             </main>

@@ -1,0 +1,14 @@
+.main{
+    &__exList{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
+        gap: 20px;
+        &--exTile{
+            background-color: rgb(45, 45, 45);
+            border: 1px solid #fff;
+            border-radius: 16px;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+    }
+}
