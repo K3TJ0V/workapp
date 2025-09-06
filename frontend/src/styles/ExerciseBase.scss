@@ -1,14 +1,110 @@
 .main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__addEx{
+        color: #fff;
+        font-size: 24px;
+        min-width: 200px;
+        width: 300px;
+        background: none;
+        border: 2px #0098b0 solid;
+        border-radius: 12px;
+        padding-bottom: 8px;
+        cursor: pointer;
+        transition: 0.2s all;
+    }
+    &__addEx:hover{
+        background-color: #0098b090;
+    }
+    &__searchBar{
+        color: #fff;
+        background: none;
+        border: 2px #0098b0 solid;
+        border-radius: 12px;
+        padding: 12px;
+        width: 100%;
+        margin: 20px 0;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+    &__searchBar:hover{
+        background-color: #0098b04f;
+    }
     &__exList{
+        height: 100%;
         display: grid;
         grid-template-columns: repeat(2, minmax(300px, 1fr));
         gap: 20px;
         &--exTile{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
             background-color: rgb(45, 45, 45);
-            border: 1px solid #fff;
             border-radius: 16px;
-            padding: 12px;
+            padding: 24px;
+            min-height: 350px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: white rgb(45, 45, 45);
             box-sizing: border-box;
         }
+        &--exName{
+            color: #00c3ff;
+            margin: 0;
+        }
+        &--exDesc, &--exComment{
+            width: 90%;
+            border-radius: 12px;
+            word-break: break-word;
+            border: 2px #0098b0 solid;
+            box-sizing: border-box;
+        }
+        &--exVideo{
+            width: 30%;
+            display: block;
+            color: #fff;
+            border: 1px solid red;
+            text-decoration: none;
+            border-radius: 12px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        &--exVideo:hover{
+            background-color: rgba(255, 0, 0, 0.326);
+        }
+        @media (min-width:1800px) {
+            grid-template-columns: repeat(3, minmax(300px, 1fr));
+        };
+        @media (min-width:2200px) {
+            grid-template-columns: repeat(4, minmax(300px, 1fr));
+        };
+        @media (max-width:850px) {
+            grid-template-columns: minmax(300px, 1fr);
+        };
     }
+}
+.search-label{
+    position: relative;
+    width: 100%;
+}
+.searchIcon{
+    position: absolute;
+    top: 30%;
+    left: calc(100% - 50px);
+}
+.no-content{
+    color: rgb(254, 125, 125);
+}
+
+.img{
+    transform: translateY(3px);
+}
+.highlight{
+    display: inline;
+    font-size: 3rem;
 }
