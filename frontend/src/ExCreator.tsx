@@ -6,6 +6,14 @@ interface ExCreatorProps{
 
 function ExCreator({setVisibility}: ExCreatorProps){
 
+    function handleOnSubmit(formData:FormData){
+        const ExName = formData.get("name")
+        const ExDesc = formData.get("description")
+        const ExVideo = formData.get("video")
+        console.log(ExName, ExDesc, ExVideo);
+    }
+
+
     return (
         <>
             <section className='main__creator'>
@@ -14,6 +22,7 @@ function ExCreator({setVisibility}: ExCreatorProps){
                 </div>
                 <article className="window">
                     <h3 className="window__title">New Exercise</h3>
+                    <form action={handleOnSubmit}>
                     <label className='label-flex' htmlFor="name">
                         Name:
                         <input className='window__input' placeholder='eg. OHP' type="text" name="name" id="name"/>
@@ -26,7 +35,8 @@ function ExCreator({setVisibility}: ExCreatorProps){
                         Video: 
                         <input className='window__input' placeholder='https://.....' type="text" name="video" id="video"/>
                     </label>
-                    <button className="window__create">Create</button>
+                    <button type='submit' className="window__create">Create</button>
+                    </form>
                 </article>
             </section>
         </>

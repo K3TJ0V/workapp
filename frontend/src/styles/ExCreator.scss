@@ -43,6 +43,7 @@
     }
     &__create{
         background: none;
+        background-color: #ffffff41;
         color: #fff;
         padding: 12px;
         border: 2px solid white;
@@ -52,7 +53,7 @@
         cursor: pointer;
     }
     &__create:hover{
-        background-color: #ffffff41;
+        background-color: #004f88;
     }
 }
 .label-flex{
