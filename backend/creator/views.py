@@ -23,7 +23,7 @@ class ExAdd(APIView):
             return Response({"error": "This exercise is already declared"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             serializer.save()
-            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ExShowUpdateDelete(APIView):

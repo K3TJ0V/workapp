@@ -25,7 +25,7 @@ function ExerciseComp({exercises} : ExerciseProps){
               <legend>Comment</legend>
                 {item.comment}
             </fieldset>
-            : <p className='no-content'>No description</p> 
+            : <p className='no-content'>No comment</p> 
             }
             {item.video ? 
             <a href={item.video} target='blank' className='main__exList--exVideo'><img className='img' src={play} alt="play icon"/>  Video</a> 

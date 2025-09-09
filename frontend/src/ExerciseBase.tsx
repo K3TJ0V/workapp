@@ -3,7 +3,7 @@ import './styles/ExerciseBase.scss'
 import useFetchGet from './utils/useFetchGet'
 import searchIcon from './assets/search.svg'
 import { Exercise } from './utils/classes'
-import ExerciseComp from './Exercise'
+import ExerciseComp from './ExerciseComp'
 import patternSearch from './utils/patternSearch'
 import ExCreator from './ExCreator'
 
@@ -27,6 +27,11 @@ function ExerciseBase() {
     setSearch(result)
   }, [data])
 
+  function handleExAdd(newEx:Exercise){
+    setExercises([...exercises, newEx])
+    setSearch([...search, newEx])
+  }
+
   function handleOnChange(e:ChangeEvent<HTMLInputElement>){
     const pattern = e.target.value
     setSearch(exercises.filter((ex)=> patternSearch(pattern, ex.name)))    
@@ -41,7 +46,7 @@ function ExerciseBase() {
       </label>
       {isLoading && <p>Loading....</p>}
       {data && <ExerciseComp exercises={search}/>}
-      {creaotrVisibility && <ExCreator setVisibility={setCreaotrVisibility}/>}
+      {creaotrVisibility && <ExCreator handleExAdd={handleExAdd} setVisibility={setCreaotrVisibility}/>}
     </>
   )
 }
