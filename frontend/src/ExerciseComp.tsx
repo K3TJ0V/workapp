@@ -1,6 +1,11 @@
 import type { Exercise } from "./utils/classes"
+import Agreement from "./Agreement"
 import play from './assets/play.svg'
+import trash from './assets/trash.svg'
+import edit from './assets/edit.svg'
 import './styles/ExerciseComp.scss'
+import { useState } from "react"
+import ExEdit from "./ExEdit.tsx"
 
 
 interface ExerciseProps{
@@ -8,6 +13,9 @@ interface ExerciseProps{
 }
 
 function ExerciseComp({exercises} : ExerciseProps){
+    const [agreeVisibility, setAgreeVisibility] = useState<boolean>(false)
+    const [deletingItemName, setDeletingItemName] = useState<string>('')
+    const [editVisibility, setEditVisibility] = useState<boolean>(false)
     return (
         <section className='main__exList'>
         {exercises.map((item)=>{
@@ -31,8 +39,12 @@ function ExerciseComp({exercises} : ExerciseProps){
             <a href={item.video} target='blank' className='main__exList--exVideo'><img className='img' src={play} alt="play icon"/>  Video</a> 
             : <p className='no-content'>No video</p>
             }
+            <button onClick={()=>{setEditVisibility(!editVisibility)}} className="editButton"><img src={edit} alt="edit icon" /></button>
+            <button onClick={()=>{setAgreeVisibility(!agreeVisibility); setDeletingItemName(item.name)}} className="deleteButton"><img src={trash} alt="trash icon" /></button>
           </article>
         })}  
+        {agreeVisibility && <Agreement visibility={setAgreeVisibility} name={deletingItemName}/>}
+        {editVisibility && <ExEdit setVisibility={setEditVisibility}/>}
       </section>
     )
 }

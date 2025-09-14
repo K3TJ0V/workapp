@@ -6,6 +6,7 @@
         grid-template-columns: repeat(2, minmax(300px, 1fr));
         gap: 20px;
         &--exTile{
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -59,4 +60,28 @@
 
 .no-content{
     color: rgb(254, 125, 125);
+}
+.deleteButton, .editButton{
+    display: flex;
+    position: absolute;
+    left: calc(100% - 66px);
+    top: calc(100% - 66px);
+    background: none;
+    width: 42px;
+    height: 42px;
+    padding: 8px;
+    border: 2px solid red;
+    border-radius: 50%;
+    transition: 0.1s all;
+    cursor: pointer;
+}
+.editButton{
+    left: 24px;
+    border: 2px solid #00bfff;
+}
+.editButton:hover{
+    background-color: #00bfff72;
+}
+.deleteButton:hover{
+    background-color: rgba(255, 0, 0, 0.346);
 }
