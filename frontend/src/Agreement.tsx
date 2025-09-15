@@ -2,10 +2,11 @@ import './styles/Agreement.scss'
 
 interface AgreementProps{
     name: string,
-    visibility: React.Dispatch<React.SetStateAction<boolean>>
+    visibility: React.Dispatch<React.SetStateAction<boolean>>,
+    onDelete: (name:string) => void
 }
 
-function Agreement({name, visibility} : AgreementProps){
+function Agreement({name, visibility, onDelete} : AgreementProps){
 
     return(
         <section className='container'>
@@ -13,7 +14,7 @@ function Agreement({name, visibility} : AgreementProps){
                 <h4 className="agreeWindow__title">Are you sure you want to delete:</h4>
                 <p className="agreeWindow__name">{name}</p>
                 <div className='button-flex'>
-                    <button className="agreeWindow__yes">YES</button>
+                    <button onClick={()=>{onDelete(name); visibility(false)}} className="agreeWindow__yes">YES</button>
                     <button onClick={()=>{visibility(false)}} className="agreeWindow__no">NO</button>
                 </div>
             </article>

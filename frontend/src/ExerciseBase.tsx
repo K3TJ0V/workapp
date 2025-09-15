@@ -45,7 +45,7 @@ function ExerciseBase() {
         <img src={searchIcon} alt="search icon" className='searchIcon'/>
       </label>
       {isLoading && <p>Loading....</p>}
-      {data && <ExerciseComp exercises={search}/>}
+      {data && <ExerciseComp setSearch={setSearch} setExercises={setExercises} exercises={search}/>}
       {creaotrVisibility && <ExCreator handleExAdd={handleExAdd} setVisibility={setCreaotrVisibility}/>}
     </>
   )

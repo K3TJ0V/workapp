@@ -6,16 +6,31 @@ import edit from './assets/edit.svg'
 import './styles/ExerciseComp.scss'
 import { useState } from "react"
 import ExEdit from "./ExEdit.tsx"
+import { fetchDelete } from "./utils/fetchDelete.ts"
 
 
 interface ExerciseProps{
-    exercises: Exercise[] 
+    exercises: Exercise[],
+    setExercises: React.Dispatch<React.SetStateAction<Exercise[]>>,
+    setSearch: React.Dispatch<React.SetStateAction<Exercise[]>>
 }
 
-function ExerciseComp({exercises} : ExerciseProps){
+function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
     const [agreeVisibility, setAgreeVisibility] = useState<boolean>(false)
     const [deletingItemName, setDeletingItemName] = useState<string>('')
     const [editVisibility, setEditVisibility] = useState<boolean>(false)
+
+    function handleOnDelete(name:string){
+      const deleting = async () =>{
+        const res = await fetchDelete(`exercises/delete/`, '8000', name)
+        const data = await res
+        console.log(data);
+        setExercises(exercises.filter((item)=>item.name !== name))
+        setSearch(exercises.filter((item)=>item.name !== name))
+      }
+      deleting()
+    }
+
     return (
         <section className='main__exList'>
         {exercises.map((item)=>{
@@ -43,7 +58,7 @@ function ExerciseComp({exercises} : ExerciseProps){
             <button onClick={()=>{setAgreeVisibility(!agreeVisibility); setDeletingItemName(item.name)}} className="deleteButton"><img src={trash} alt="trash icon" /></button>
           </article>
         })}  
-        {agreeVisibility && <Agreement visibility={setAgreeVisibility} name={deletingItemName}/>}
+        {agreeVisibility && <Agreement onDelete={handleOnDelete} visibility={setAgreeVisibility} name={deletingItemName}/>}
         {editVisibility && <ExEdit setVisibility={setEditVisibility}/>}
       </section>
     )
