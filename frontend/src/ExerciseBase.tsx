@@ -39,11 +39,13 @@ function ExerciseBase() {
   
   return (
     <>
+      <div className='main__inpFlex'>
       <button onClick={()=>setCreaotrVisibility(!creaotrVisibility)} className='main__addEx'><p className='highlight'>+</p><br/>Add new exercise</button>
       <label htmlFor="search" className='search-label'>
         <input onChange={event=>{handleOnChange(event)}} className='main__searchBar' type="text" name="search" id="search" placeholder='Eg. Bench press' />
         <img src={searchIcon} alt="search icon" className='searchIcon'/>
       </label>
+      </div>
       {isLoading && <p>Loading....</p>}
       {data && <ExerciseComp setSearch={setSearch} setExercises={setExercises} exercises={search}/>}
       {creaotrVisibility && <ExCreator handleExAdd={handleExAdd} setVisibility={setCreaotrVisibility}/>}

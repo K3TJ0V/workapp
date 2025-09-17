@@ -17,11 +17,14 @@ interface ExerciseProps{
 
 function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
     const [agreeVisibility, setAgreeVisibility] = useState<boolean>(false)
-    const [deletingItemName, setDeletingItemName] = useState<string>('')
+    const [modifiedItem, setModifiedItem] = useState<Exercise>()
     const [editVisibility, setEditVisibility] = useState<boolean>(false)
 
-    function handleOnDelete(name:string){
+    function handleOnDelete(name:string | undefined){
       const deleting = async () =>{
+        if(!name){
+          return "ERROR: name is not declared"
+        }
         const res = await fetchDelete(`exercises/delete/`, '8000', name)
         const data = await res
         console.log(data);
@@ -29,6 +32,9 @@ function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
         setSearch(exercises.filter((item)=>item.name !== name))
       }
       deleting()
+    }
+
+    function handleEdition(FormData:FormData){
     }
 
     return (
@@ -54,12 +60,12 @@ function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
             <a href={item.video} target='blank' className='main__exList--exVideo'><img className='img' src={play} alt="play icon"/>  Video</a> 
             : <p className='no-content'>No video</p>
             }
-            <button onClick={()=>{setEditVisibility(!editVisibility)}} className="editButton"><img src={edit} alt="edit icon" /></button>
-            <button onClick={()=>{setAgreeVisibility(!agreeVisibility); setDeletingItemName(item.name)}} className="deleteButton"><img src={trash} alt="trash icon" /></button>
+            <button onClick={()=>{setModifiedItem(item); setEditVisibility(!editVisibility)}} className="editButton"><img src={edit} alt="edit icon" /></button>
+            <button onClick={()=>{setModifiedItem(item); setAgreeVisibility(!agreeVisibility)}} className="deleteButton"><img src={trash} alt="trash icon" /></button>
           </article>
         })}  
-        {agreeVisibility && <Agreement onDelete={handleOnDelete} visibility={setAgreeVisibility} name={deletingItemName}/>}
-        {editVisibility && <ExEdit setVisibility={setEditVisibility}/>}
+        {agreeVisibility && <Agreement onDelete={handleOnDelete} visibility={setAgreeVisibility} name={modifiedItem?.name}/>}
+        {editVisibility && <ExEdit handleEdition={handleEdition} item={modifiedItem} setVisibility={setEditVisibility}/>}
       </section>
     )
 }

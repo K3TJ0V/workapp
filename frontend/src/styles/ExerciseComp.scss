@@ -1,6 +1,11 @@
 .main{
+    &__inpFlex{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
     &__exList{
-        height: 100%;
         width: 100%;
         display: grid;
         grid-template-columns: repeat(2, minmax(300px, 1fr));
@@ -16,6 +21,7 @@
             border-radius: 16px;
             padding: 24px;
             min-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             box-sizing: border-box;
             scrollbar-width: thin;

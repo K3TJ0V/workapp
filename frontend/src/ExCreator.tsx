@@ -8,14 +8,14 @@ interface ExCreatorProps{
     handleExAdd : (ex : Exercise) => void
 }
 interface PostBody{
-    "name"?:string,
+    "name":string,
     "description"?:string,
     "video"?:string,
     "comment"?:string
 }
 
 function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
-    const [postData, setPostData] = useState<PostBody>({})
+    const [postData, setPostData] = useState<PostBody>({name: ""})
     useEffect(()=>{
         if(!postData["name"]){
             return
@@ -35,7 +35,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
     }, [postData])
 
     function handleOnSubmit(formData:FormData){
-        let data:PostBody = {}
+        let data:PostBody = {name: ""}
         data["name"] = String(formData.get("name"))
         if(formData.get("description")){
             data["description"] = String(formData.get("description"))

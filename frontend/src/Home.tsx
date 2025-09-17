@@ -1,9 +1,6 @@
 import './styles/Home.scss'
 
 function Home(){
-
-
-
     return(
         <>
             <section className='main__homeFlex'>

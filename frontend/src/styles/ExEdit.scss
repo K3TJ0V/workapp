@@ -2,18 +2,21 @@
     position: absolute;
     left: 0;
     top: 0;
-    &__editWindow{
+    &__checkboxes{
         position: relative;
+        padding: 20px;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: 400px;
-        height: 600px;
+        width: 500px;
+        height: 700px;
         display: flex;
         flex-direction: column;
         align-items: center;
         background-color: black;
         border: 2px solid white;
+        z-index: 2;
+        box-sizing: border-box;
         &--title{
             width: 80%;
             text-align: center;
@@ -30,5 +33,84 @@
             border-radius: 12px 12px 0 0;
             cursor: pointer;
         }
+        &--grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
     }
+    &__editForm{
+        display: flex;
+        flex-direction: column;
+        &--inputs{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 450px;
+            width: 100%;
+        }
+        &--form{
+            text-align: end;
+        }
+    }
+    &__editForm .inp{
+        width: 400px;
+        max-width: 400px;
+        max-height: 182px;
+        color: #fff;
+        border: 2px #ffffff solid;
+        border-radius: 16px;
+        margin-bottom: 8px;
+        padding: 12px;
+        background: none;
+    }
+    &__button{
+        background-color: #ffffff30;
+        color: #FFF;
+        border: 2px solid #fff;
+        border-radius: 16px;
+        padding: 8px 14px;
+        transition: 0.1s all;
+        cursor: pointer;
+    }
+    &__button:hover{
+        background-color: #ffffff84;
+    }
+}
+.button-placement{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+.highlight{
+    font-size: 1.2rem;
+    color: aqua;
+}
+.label{
+    display: flex;
+    cursor: pointer;
+}
+input[type="checkbox"]{
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid red;
+    margin-right: 10px;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+input[type="checkbox"]::before{
+    content: "";
+    background-color: red;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 0.1s all;
+}
+input[type="checkbox"]:checked::before{
+    transform: scale(1);
 }

@@ -1,9 +1,9 @@
 import './styles/Agreement.scss'
 
 interface AgreementProps{
-    name: string,
+    name: string | undefined,
     visibility: React.Dispatch<React.SetStateAction<boolean>>,
-    onDelete: (name:string) => void
+    onDelete: (name:string | undefined) => void
 }
 
 function Agreement({name, visibility, onDelete} : AgreementProps){

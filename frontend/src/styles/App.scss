@@ -7,6 +7,13 @@ body{
 
 .main{
     color: #fff;
+    height: calc(100vh - 102px);
     font-size: 1.2rem;
-    padding: 50px;
+    padding: 20px 50px;
+    margin-top: 102px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: white black;
+    scrollbar-gutter: stable;
 }

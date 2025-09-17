@@ -1,4 +1,6 @@
 .nav{
+    position: fixed;
+    top: 0;
     background-color: #058dbe;
     color: #fff;
     display: flex;
@@ -6,8 +8,10 @@
     align-items: center;
     height: 100px;
     width: 100%;
-    box-shadow: 2px 2px 3px #fff;
+    border-bottom: 2px solid #fff;
     border-radius: 0 0 30px 30px;
+    box-sizing: border-box;
+    z-index: 2;
     &__logo{
         height: 100px;
         transition: 0.1s all;
