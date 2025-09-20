@@ -34,9 +34,6 @@ function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
       deleting()
     }
 
-    function handleEdition(FormData:FormData){
-    }
-
     return (
         <section className='main__exList'>
         {exercises.map((item)=>{
@@ -65,7 +62,7 @@ function ExerciseComp({exercises, setExercises, setSearch} : ExerciseProps){
           </article>
         })}  
         {agreeVisibility && <Agreement onDelete={handleOnDelete} visibility={setAgreeVisibility} name={modifiedItem?.name}/>}
-        {editVisibility && <ExEdit handleEdition={handleEdition} item={modifiedItem} setVisibility={setEditVisibility}/>}
+        {editVisibility && <ExEdit item={modifiedItem} setVisibility={setEditVisibility}/>}
       </section>
     )
 }

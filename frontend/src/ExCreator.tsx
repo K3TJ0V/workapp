@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './styles/ExCreator.scss'
-import useFetchPost from './utils/fetchPost';
+import fetchPost from './utils/fetchPost';
 import { Exercise } from './utils/classes';
 
 interface ExCreatorProps{
@@ -21,30 +21,33 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
             return
         }
         const postItem = async () => {
-            const [id, error] = await useFetchPost("/creator/exercises/", "8000", postData)
-            if(error){
-                console.log(error);
+            const [id, result] = await fetchPost("/creator/exercises/", "8000", postData)
+            if(result.error){
+                console.log(result.error);
                 return
             }
-            if(id && postData["name"]){
-                const newEx = new Exercise(id, postData["name"], postData["description"], postData["video"], postData["comment"])
+            if(id && postData.name){
+                const newEx = new Exercise(id, postData.name, postData.description, postData.video, postData.comment)
+                if(result.message){
+                    console.log(result.message);
+                }
                 handleExAdd(newEx)
             }
         }
-        postItem()        
+        postItem()
     }, [postData])
 
     function handleOnSubmit(formData:FormData){
         let data:PostBody = {name: ""}
-        data["name"] = String(formData.get("name"))
+        data.name = String(formData.get("name"))
         if(formData.get("description")){
-            data["description"] = String(formData.get("description"))
+            data.description = String(formData.get("description"))
         }
         if(formData.get("video")){
-            data["video"] = String(formData.get("video"))
+            data.video = String(formData.get("video"))
         }
         if(formData.get("comment")){
-            data["comment"] = String(formData.get("comment"))
+            data.comment = String(formData.get("comment"))
         }
         setPostData(data)
     }
@@ -71,7 +74,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
                         </label>
                         <label className='label-flex' htmlFor="video">
                             Video: 
-                            <input className='window__input' placeholder='https://.....' type="text" name="video" id="video"/>
+                            <input className='window__input' placeholder='https://.....' type="url" name="video" id="video"/>
                         </label>
                         <label className='label-flex' htmlFor="comment">
                             Comment: 

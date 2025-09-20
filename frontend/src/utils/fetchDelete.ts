@@ -1,5 +1,10 @@
+interface returnedValue{
+    "message"?: string,
+    "error"?: any
+}
+
 export async function fetchDelete(path:string, port: string, name:string){
-    let result : {"message":string} | {"error": any}
+    let result : returnedValue = {}
     
     if(!path.startsWith('/')){
         path = '/' + path
@@ -16,14 +21,12 @@ export async function fetchDelete(path:string, port: string, name:string){
     if(name.split(' ').length > 1){
         name = name.trim().replaceAll(' ', '%20')
     }
-    const url = `http://localhost:${port}/creator` + path + name.trim() + '/'
-    console.log(url);
-    
+    const url = `http://localhost:${port.trim()}/creator` + path + name.trim() + '/'    
     try{
         const data = await fetch(url, {method: "DELETE", headers: {"Content-Type": "application/json"}})
-        result = {"message" : `item ${name} has been deleted succesfully`}
+        result.message = `item ${name} has been deleted succesfully`
     }catch(err){
-        result = {"error" : err}
+        result.error = err
     }
     return result
 }

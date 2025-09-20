@@ -1,19 +1,66 @@
 import { useState } from 'react'
 import './styles/ExEdit.scss'
 import type { Exercise } from './utils/classes'
+import { fetchPut } from './utils/fetchPut';
 
 interface ExEditProps{
     item: Exercise | undefined;
     setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
-    handleEdition : (FormData : FormData) => void
 }
 
-function ExEdit({item, setVisibility, handleEdition} : ExEditProps){
+interface fetchBody{
+    name?: string,
+    description?: string,
+    video?: string,
+    comment?: string
+}
+
+function ExEdit({item, setVisibility} : ExEditProps){
     const [nameVisibility, setNameVisibility] = useState<boolean>(false)
     const [descVisibility, setDescVisibility] = useState<boolean>(false)
     const [videoVisibility, setVideoVisibility] = useState<boolean>(false)
     const [commentVisibility, setCommentVisibility] = useState<boolean>(false)
     const buttonVisibility = nameVisibility || descVisibility || videoVisibility || commentVisibility
+
+    function handleOnSubmit(formData: FormData){
+        let fetchBody: fetchBody = {}
+        const name = String(formData.get("nameEdit")).trim()
+        const desc = String(formData.get("descEdit")).trim()
+        const video = String(formData.get("videoEdit")).trim()
+        const comment = String(formData.get("commentEdit")).trim()
+        if(item === undefined){
+            console.log("Something went wrong");
+            return  
+        }
+        if(name !== "null"){
+            fetchBody.name = name;
+        }else{
+            fetchBody.name = item.name
+        }
+        if(desc !== "null"){
+            fetchBody.description = desc
+        }
+        if(video !== "null"){
+            fetchBody.video = video
+        }
+        if(comment !== "null"){
+            fetchBody.comment = comment
+        }
+        const putData = async () => {
+            const request = await fetchPut(`exercises/update/`, "8000", item.name, fetchBody)
+            if(request.error){
+                console.log(request.error);
+                return
+            }
+            if(request.message === undefined){
+                return
+            }
+            console.log(request.message);
+        }
+        putData();
+
+        Object.assign(item, fetchBody)
+    }
 
     return(
         <>
@@ -43,12 +90,12 @@ function ExEdit({item, setVisibility, handleEdition} : ExEditProps){
                     <article className='container__editForm'>
                         <form onSubmit={(e)=>{
                             e.preventDefault()
-                            handleEdition(new FormData(e.currentTarget))
+                            handleOnSubmit(new FormData(e.currentTarget))
                         }} className='container__editForm--form'>
                             <div className="container__editForm--inputs">
                                 {nameVisibility && <label><input className="inp" placeholder={item.name} type="text" name="nameEdit" id="nameEdit" required/></label>}
                                 {descVisibility && <label><textarea rows={7} className="inp" placeholder={item.description} name="descEdit" id="descEdit"/></label>}
-                                {videoVisibility && <label><input className="inp" placeholder={item.video} type="text" name="videoEdit" id="videoEdit" /></label>}
+                                {videoVisibility && <label><input className="inp" placeholder={item.video} type="url" name="videoEdit" id="videoEdit" /></label>}
                                 {commentVisibility && <label><input className="inp" placeholder={item.comment} type="text" name="commentEdit" id="commentEdit" /></label>}
                             </div>
                             {buttonVisibility && <button className="container__button">Edit</button>}

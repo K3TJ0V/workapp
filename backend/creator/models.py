@@ -4,9 +4,9 @@ from django.db import models
 # Create your models here.
 class Exercise(models.Model):
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=800, null=True)
-    video = models.URLField(max_length=255, null=True)
-    comment = models.CharField(max_length=800, null=True)
+    description = models.CharField(max_length=800, null=True, blank=True)
+    video = models.URLField(max_length=255, null=True, blank=True)
+    comment = models.CharField(max_length=800, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"

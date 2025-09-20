@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
 import './styles/ExerciseBase.scss'
-import useFetchGet from './utils/useFetchGet'
+import useFetchGet from './hooks/useFetchGet'
 import searchIcon from './assets/search.svg'
 import { Exercise } from './utils/classes'
 import ExerciseComp from './ExerciseComp'

@@ -4,11 +4,14 @@ interface PostBody{
     "video"?:string,
     "comment"?:string
 }
+interface returnedValue{
+    "message"?: string,
+    "error"?: string
+}
 
 export default async function fetchPost(endpoint:string, port:string, body:PostBody){
-    let error:any = null;
     let id = null
-    let item = null;
+    let result : returnedValue = {}
 
     const AbortCont = new AbortController()
     if(!endpoint.startsWith('/')){
@@ -25,22 +28,19 @@ export default async function fetchPost(endpoint:string, port:string, body:PostB
              body:JSON.stringify(body), 
              headers: {"Content-Type": "application/json"}
             })
-        if(!response.ok){
-            error = "Error while fetching"
-        }
-        const item = await response.json()        
-        if(error && item["video"]){
-            error = "Video link is invalid"
-        }else if(error && item["error"]){
-            error = item["error"]
-        }
-        id = item.id
+        const res = await response.json()
+        if(!response.ok && res.error){
+            result.error = res.error
+            return [null, result]
+        }        
+        id = res.id
+        result.message = `Item ${res.name} was created sucessfully`
     }catch(err:any){
         if(err.name == "AbortError"){
             console.log("post aborted");
         }else{
-            error = err
+            result = {"error" : err}
         }
     }
-    return [id, error, item]
+    return [id, result]
 }
