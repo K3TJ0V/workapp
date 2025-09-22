@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import './styles/ExCreator.scss'
 import fetchPost from './utils/fetchPost';
 import { Exercise } from './utils/classes';
+import Popup from './Popup';
+import type { popupData } from './utils/popupData';
 
 interface ExCreatorProps{
     setVisibility: React.Dispatch<React.SetStateAction<boolean>>,
@@ -16,6 +18,8 @@ interface PostBody{
 
 function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
     const [postData, setPostData] = useState<PostBody>({name: ""})
+    const [popup, setPopup] = useState<boolean>(false);
+    const [popupData, setPopupData] = useState<popupData>()
     useEffect(()=>{
         if(!postData["name"]){
             return
@@ -23,13 +27,21 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
         const postItem = async () => {
             const [id, result] = await fetchPost("/creator/exercises/", "8000", postData)
             if(result.error){
-                console.log(result.error);
+                setPopup(true)
+                setPopupData({content: result.error, result: "error"})
+                setTimeout(()=>{
+                    setPopup(false)
+                },2100)
                 return
             }
             if(id && postData.name){
                 const newEx = new Exercise(id, postData.name, postData.description, postData.video, postData.comment)
                 if(result.message){
-                    console.log(result.message);
+                    setPopup(true)
+                    setPopupData({content: result.message, result: "message"})
+                    setTimeout(()=>{
+                        setPopup(false)
+                    },2100)
                 }
                 handleExAdd(newEx)
             }
@@ -54,6 +66,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
 
     return (
         <>
+          {popup && popupData && <Popup content={popupData.content} result={popupData.result}/>}
             <section className='main__creator'>
                 <div className='close-flex'>
                     <button onClick={()=>setVisibility(false)} className='main__creator--close'>CLOSE</button>

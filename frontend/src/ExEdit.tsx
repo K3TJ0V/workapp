@@ -2,6 +2,8 @@ import { useState } from 'react'
 import './styles/ExEdit.scss'
 import type { Exercise } from './utils/classes'
 import { fetchPut } from './utils/fetchPut';
+import Popup from './Popup';
+import type { popupData } from './utils/popupData';
 
 interface ExEditProps{
     item: Exercise | undefined;
@@ -21,6 +23,8 @@ function ExEdit({item, setVisibility} : ExEditProps){
     const [videoVisibility, setVideoVisibility] = useState<boolean>(false)
     const [commentVisibility, setCommentVisibility] = useState<boolean>(false)
     const buttonVisibility = nameVisibility || descVisibility || videoVisibility || commentVisibility
+    const [popup, setPopup] = useState<boolean>(false);
+    const [popupData, setPopupData] = useState<popupData>()
 
     function handleOnSubmit(formData: FormData){
         let fetchBody: fetchBody = {}
@@ -49,13 +53,21 @@ function ExEdit({item, setVisibility} : ExEditProps){
         const putData = async () => {
             const request = await fetchPut(`exercises/update/`, "8000", item.name, fetchBody)
             if(request.error){
-                console.log(request.error);
+                setPopupData({content: request.error, result: "error"})
+                setPopup(true)
+                setTimeout(()=>{
+                    setPopup(false)
+                }, 2100)
                 return
             }
             if(request.message === undefined){
                 return
             }
-            console.log(request.message);
+            setPopupData({content: request.message, result: "message"})
+            setPopup(true)
+            setTimeout(()=>{
+                setPopup(false)
+            }, 2100)
         }
         putData();
 
@@ -64,6 +76,7 @@ function ExEdit({item, setVisibility} : ExEditProps){
 
     return(
         <>
+        {popup && popupData && <Popup content={popupData.content} result={popupData.result}/>}
         {item ? 
             <section className='container'>
                 <article className="container__checkboxes">

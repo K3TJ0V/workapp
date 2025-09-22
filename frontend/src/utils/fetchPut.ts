@@ -22,8 +22,7 @@ export async function fetchPut(endpoint:string, port:string, updatedExName: stri
         updatedExName = updatedExName.trim().replaceAll(' ', "%20")
     }
     const url = `http://localhost:${port.trim()}/creator` + endpoint + updatedExName.trim() + '/'
-    try{
-        console.log(reqBody);
+    try{ 
         const request = await fetch(url, 
             {method: "PUT",
              body: JSON.stringify(reqBody), 
