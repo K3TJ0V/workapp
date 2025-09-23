@@ -33,5 +33,6 @@ export async function fetchPut(endpoint:string, port:string, updatedExName: stri
     }catch(err){
         result.error = `Exercise: ${updatedExName.replaceAll("%20", ' ')} couldn't be updated`
     }
+    const delay = await new Promise(resolve => setTimeout(resolve, 2000)) 
     return result
 }

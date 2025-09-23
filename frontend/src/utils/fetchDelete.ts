@@ -28,6 +28,7 @@ export async function fetchDelete(path:string, port: string, name:string){
     }catch(err){
         result.error = err
     }
+    const delay = await new Promise(resolve => setTimeout(resolve, 2000))
     return result
 }
 

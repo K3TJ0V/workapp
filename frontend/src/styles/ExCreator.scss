@@ -18,6 +18,9 @@
             padding: 8px 12px;
             cursor: pointer;
         }
+        &--close:disabled{
+            opacity: 0.3;
+        }
     }
 }
 .window{
@@ -56,6 +59,9 @@
     }
     &__create:hover{
         background-color: #004f88;
+    }
+    &__create:disabled{
+        opacity: 0.3;
     }
 }
 .label-flex{

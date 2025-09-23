@@ -12,7 +12,6 @@ interface returnedValue{
 export default async function fetchPost(endpoint:string, port:string, body:PostBody){
     let id = null
     let result : returnedValue = {}
-
     const AbortCont = new AbortController()
     if(!endpoint.startsWith('/')){
         endpoint = '/' + endpoint
@@ -20,7 +19,7 @@ export default async function fetchPost(endpoint:string, port:string, body:PostB
     if(!endpoint.endsWith('/')){
         endpoint = endpoint + '/'
     }
-    let path = 'http://localhost:' + port.trim() + endpoint.trim() + 'add/'    
+    let path = 'http://localhost:' + port.trim() + endpoint.trim() + 'add/' 
     try{
         const response = await fetch(path, 
             {method:"POST",
@@ -42,5 +41,6 @@ export default async function fetchPost(endpoint:string, port:string, body:PostB
             result = {"error" : err}
         }
     }
+    const delay = await new Promise(resolve => setTimeout(resolve, 2000))
     return [id, result]
 }

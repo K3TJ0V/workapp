@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import './styles/ExEdit.scss'
 import type { Exercise } from './utils/classes'
 import { fetchPut } from './utils/fetchPut';
@@ -25,6 +25,8 @@ function ExEdit({item, setVisibility} : ExEditProps){
     const buttonVisibility = nameVisibility || descVisibility || videoVisibility || commentVisibility
     const [popup, setPopup] = useState<boolean>(false);
     const [popupData, setPopupData] = useState<popupData>()
+    const editRef = useRef<HTMLButtonElement>(null)
+    const closeRef = useRef<HTMLButtonElement>(null)
 
     function handleOnSubmit(formData: FormData){
         let fetchBody: fetchBody = {}
@@ -51,6 +53,11 @@ function ExEdit({item, setVisibility} : ExEditProps){
             fetchBody.comment = comment
         }
         const putData = async () => {
+            if(!editRef.current || !closeRef.current){
+                return 
+            }
+            editRef.current.setAttribute("disabled", "")
+            closeRef.current.setAttribute("disabled", "")
             const request = await fetchPut(`exercises/update/`, "8000", item.name, fetchBody)
             if(request.error){
                 setPopupData({content: request.error, result: "error"})
@@ -58,9 +65,13 @@ function ExEdit({item, setVisibility} : ExEditProps){
                 setTimeout(()=>{
                     setPopup(false)
                 }, 2100)
+                editRef.current.removeAttribute("disabled")
+                closeRef.current.removeAttribute("disabled")
                 return
             }
             if(request.message === undefined){
+                editRef.current.removeAttribute("disabled")
+                closeRef.current.removeAttribute("disabled")
                 return
             }
             setPopupData({content: request.message, result: "message"})
@@ -68,6 +79,8 @@ function ExEdit({item, setVisibility} : ExEditProps){
             setTimeout(()=>{
                 setPopup(false)
             }, 2100)
+            editRef.current.removeAttribute("disabled")
+            closeRef.current.removeAttribute("disabled")
         }
         putData();
 
@@ -80,7 +93,7 @@ function ExEdit({item, setVisibility} : ExEditProps){
         {item ? 
             <section className='container'>
                 <article className="container__checkboxes">
-                    <button onClick={()=>{setVisibility(false)}} className='container__checkboxes--close'>CLOSE</button>
+                    <button ref={closeRef} onClick={()=>{setVisibility(false)}} className='container__checkboxes--close'>CLOSE</button>
                     <h4 className="container__checkboxes--title">Select properties of <p className='highlight'>{item ? item.name : "ERROR: something went wrong"}</p> that you want to edit:</h4>
                     <div className="container__checkboxes--grid">
                         <label className='label' htmlFor="name">
@@ -111,7 +124,7 @@ function ExEdit({item, setVisibility} : ExEditProps){
                                 {videoVisibility && <label><input className="inp" placeholder={item.video} type="url" name="videoEdit" id="videoEdit" /></label>}
                                 {commentVisibility && <label><input className="inp" placeholder={item.comment} type="text" name="commentEdit" id="commentEdit" /></label>}
                             </div>
-                            {buttonVisibility && <button className="container__button">Edit</button>}
+                            {buttonVisibility && <button ref={editRef} className="container__button">Edit</button>}
                         </form>
                     </article>
                 </article>

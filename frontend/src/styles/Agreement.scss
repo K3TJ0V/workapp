@@ -40,12 +40,18 @@
     &__yes:hover{
         background-color: rgba(0, 249, 0, 0.357);
     }
+    &__yes:disabled{
+        opacity: 0.3;
+    }
     &__no{
         color: red;
         border: 2px solid red
     }
     &__no:hover{
         background-color: rgba(255, 0, 0, 0.523);
+    }
+    &__no:disabled{
+        opacity: 0.3;
     }
 }
 .button-flex{

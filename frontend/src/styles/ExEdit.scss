@@ -33,6 +33,9 @@
             border-radius: 12px 12px 0 0;
             cursor: pointer;
         }
+        &--close:disabled{
+            opacity: 0.3;
+        }
         &--grid{
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -66,7 +69,7 @@
         background: none;
     }
     &__button{
-        background-color: #ffffff30;
+        background-color: #ffffff3b;
         color: #FFF;
         border: 2px solid #fff;
         border-radius: 16px;
@@ -76,6 +79,9 @@
     }
     &__button:hover{
         background-color: #ffffff84;
+    }
+    &__button:disabled{
+        opacity: 0.3;
     }
 }
 .button-placement{

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './styles/ExCreator.scss'
 import fetchPost from './utils/fetchPost';
 import { Exercise } from './utils/classes';
@@ -20,11 +20,16 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
     const [postData, setPostData] = useState<PostBody>({name: ""})
     const [popup, setPopup] = useState<boolean>(false);
     const [popupData, setPopupData] = useState<popupData>()
+    const submitRef = useRef<HTMLButtonElement>(null)
+    const closeRef = useRef<HTMLButtonElement>(null)
+
     useEffect(()=>{
         if(!postData["name"]){
             return
         }
         const postItem = async () => {
+            submitRef.current!.setAttribute("disabled", "")
+            closeRef.current!.setAttribute("disabled", "")
             const [id, result] = await fetchPost("/creator/exercises/", "8000", postData)
             if(result.error){
                 setPopup(true)
@@ -32,6 +37,8 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
                 setTimeout(()=>{
                     setPopup(false)
                 },2100)
+                submitRef.current!.removeAttribute("disabled")
+                closeRef.current!.removeAttribute("disabled")
                 return
             }
             if(id && postData.name){
@@ -45,6 +52,8 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
                 }
                 handleExAdd(newEx)
             }
+            submitRef.current!.removeAttribute("disabled")
+            closeRef.current!.removeAttribute("disabled")
         }
         postItem()
     }, [postData])
@@ -69,7 +78,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
           {popup && popupData && <Popup content={popupData.content} result={popupData.result}/>}
             <section className='main__creator'>
                 <div className='close-flex'>
-                    <button onClick={()=>setVisibility(false)} className='main__creator--close'>CLOSE</button>
+                    <button ref={closeRef} onClick={()=>setVisibility(false)} className='main__creator--close'>CLOSE</button>
                 </div>
                 <article className="window">
                     <h3 className="window__title">New Exercise</h3>
@@ -93,7 +102,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
                             Comment: 
                             <textarea className='window__input' rows={3} placeholder='comment' name="comment" id="comment"/>
                         </label>
-                        <button type='submit' className="window__create">Create</button>
+                        <button ref={submitRef} type='submit' className="window__create">Create</button>
                     </form>
                 </article>
             </section>
