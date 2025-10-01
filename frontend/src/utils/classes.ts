@@ -28,14 +28,14 @@ const rir_regex = /[0-9]-[0-9]|[0-9]/
 export class WorkoutItem{
     id: number;
     sets: number;
-    exercise: number;
+    exercise: string;
     workout: number;
     weight: number | undefined;
     reps: number | undefined;
     time: number | undefined;
     private _tempo: string | undefined;
     private _rir : string | undefined;
-    constructor(id: number, sets: number, exercise: number, workout: number, weight?:number, reps?:number, time?:number, tempo?:string, rir?:string){
+    constructor(id: number, sets: number, exercise: string, workout: number, weight?:number, reps?:number, time?:number, tempo?:string, rir?:string){
         this.id = id;
         this.sets = sets;
         this.exercise = exercise;

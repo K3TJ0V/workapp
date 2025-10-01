@@ -10,7 +10,9 @@ class ExSerializer(serializers.ModelSerializer):
 
 
 class WorkoutItemSerializer(serializers.ModelSerializer):
-    exercise = serializers.PrimaryKeyRelatedField(queryset=Exercise.objects.all())
+    exercise = serializers.SlugRelatedField(
+        slug_field="name", queryset=Exercise.objects.all()
+    )
     workout = serializers.PrimaryKeyRelatedField(queryset=Workout.objects.all())
     class Meta:
         model = WorkoutItem

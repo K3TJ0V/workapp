@@ -1,0 +1,15 @@
+.workouts{
+    display: grid;
+    grid-template-columns: 500px;
+    place-content: center;
+    gap: 20px;
+    @media (min-width: 1200px) {
+        grid-template-columns: 500px 500px;
+    }
+    @media (min-width: 1700px) {
+        grid-template-columns: 500px 500px 500px;
+    }
+    @media (min-width: 2000px) {
+        grid-template-columns: 500px 500px 500px 500px;
+    }
+}
