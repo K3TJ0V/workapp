@@ -1,5 +1,6 @@
 import type { WorkoutItem } from "./utils/classes";
 import './styles/WorkoutComp.scss'
+import { useRef, useState } from "react";
 
 interface WorkoutCompProps {
   id: number;
@@ -11,9 +12,20 @@ function WorkoutComp({
   descriptive_name,
   workout_items,
 }: WorkoutCompProps) {
+  const [showList, setShowList] = useState<boolean>(false)
+  const showButtonRef = useRef<HTMLButtonElement>(null)
+
+  function handleOnClick(){
+    setShowList(!showList)
+    const button = showButtonRef.current
+    if(button !== null){
+      showList ? button.classList.remove("listShown") : button.classList.add("listShown")
+    }
+  }
   return (
     <article className="workouts__item">
       <h3 className="workouts__item--name">{descriptive_name}</h3>
+      {showList &&
       <section className="workouts__item--content">
         {workout_items.map((set) => {
           return (
@@ -40,6 +52,10 @@ function WorkoutComp({
           );
         })}
       </section>
+    }
+    <div className="buttonFlex">
+      <button ref={showButtonRef} className="workouts__item--showButton" onClick={handleOnClick}>{">"}</button>
+    </div>
     </article>
   );
 }

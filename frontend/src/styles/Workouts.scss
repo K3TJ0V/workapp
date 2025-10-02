@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 500px;
     place-content: center;
+    align-items: flex-start;
     gap: 20px;
     @media (min-width: 1200px) {
         grid-template-columns: 500px 500px;
@@ -9,7 +10,7 @@
     @media (min-width: 1700px) {
         grid-template-columns: 500px 500px 500px;
     }
-    @media (min-width: 2000px) {
+    @media (min-width: 2200px) {
         grid-template-columns: 500px 500px 500px 500px;
     }
 }
