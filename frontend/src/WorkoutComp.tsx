@@ -1,19 +1,26 @@
 import type { WorkoutItem } from "./utils/classes";
 import './styles/WorkoutComp.scss'
-import { useRef, useState } from "react";
+import { useRef, useState, type RefObject } from "react";
+import WorkoutSetComp from "./WorkoutSetComp";
+import trash from './assets/trash.svg'
+import Agreement from "./Agreement";
+import { fetchDelete } from "./utils/fetchDelete";
 
 interface WorkoutCompProps {
   id: number;
   descriptive_name: string | undefined;
   workout_items: WorkoutItem[];
+  handleUiUpdate: (id:number)=>void;
 }
 function WorkoutComp({
   id,
   descriptive_name,
   workout_items,
+  handleUiUpdate
 }: WorkoutCompProps) {
   const [showList, setShowList] = useState<boolean>(false)
   const showButtonRef = useRef<HTMLButtonElement>(null)
+  const [agreement, setAgreement] = useState<boolean>(false)
 
   function handleOnClick(){
     setShowList(!showList)
@@ -22,34 +29,39 @@ function WorkoutComp({
       showList ? button.classList.remove("listShown") : button.classList.add("listShown")
     }
   }
+  function handleDelete(
+    yes: RefObject<HTMLButtonElement | null>,
+    no: RefObject<HTMLButtonElement | null>,
+    name?: string | undefined,
+    id?: number | undefined
+  ){
+    const deleting = async () =>{
+      if(!id){
+        setAgreement(false);
+        console.log("Something went wrong while passing workout id");
+        return
+      }
+      const response = await fetchDelete("workouts/delete", "8000", "id", id, descriptive_name);
+      const result = await response;
+      if(result.error){
+        console.log(result.error);
+        return
+      }
+      console.log(result.message);
+      handleUiUpdate(id)
+      setAgreement(false)
+    }
+    deleting();
+  }
   return (
+    <>
     <article className="workouts__item">
+      <button onClick={()=>{setAgreement(true)}} className="workouts__item--delete"><img src={trash} alt="trash-icon" /></button>
       <h3 className="workouts__item--name">{descriptive_name}</h3>
       {showList &&
       <section className="workouts__item--content">
         {workout_items.map((set) => {
-          return (
-            <article key={set.id} className="Set">
-              <p className="Set__exName">{set.exercise}</p>
-              <hr className="nameHr"/>
-              <table className="Set__table">
-                <thead className="Set__table--header">
-                    <tr>
-                      <th className="Set__table--header--tile">Set</th>
-                      {set.weight && <th className="Set__table--header--tile">weight</th>}
-                      {set.time && <th className="Set__table--header--tile">time</th>}
-                      {set.reps && <th className="Set__table--header--tile">reps</th>}
-                      {set.tempo && <th className="Set__table--header--tile">tempo</th>}
-                      {set.rir && <th className="Set__table--header--tile">rir</th>}
-                    </tr>
-                </thead>
-                <tbody className="Set__table--body">
-                    {renderSets(set.sets, set.weight, set.reps, set.time, set.tempo, set.rir)}
-                </tbody>
-              </table>
-              <hr className="Set__hr" />
-            </article>
-          );
+          return <WorkoutSetComp key={set.id} set={set}/>
         })}
       </section>
     }
@@ -57,30 +69,10 @@ function WorkoutComp({
       <button ref={showButtonRef} className="workouts__item--showButton" onClick={handleOnClick}>{">"}</button>
     </div>
     </article>
+    {agreement && <Agreement id={id} name={descriptive_name} visibility={setAgreement} onDelete={handleDelete}/>}
+    </>
   );
 }
-function renderSets(
-  sets: number,
-  weight?: number,
-  reps?: number,
-  time?: number,
-  tempo?: string,
-  rir?: string
-) {
-  const setsList = [];
-  for (let i = 0; i < sets; i++) {
-    setsList.push(
-        <tr key={i}>
-            <td className="Set__table--body--tile">{i+1}</td>
-            {weight && <td className="Set__table--body--tile">{weight}</td>}
-            {time && <td className="Set__table--body--tile">{time}</td>}
-            {reps && <td className="Set__table--body--tile">{reps}</td>}
-            {tempo && <td className="Set__table--body--tile">{tempo}</td>}
-            {rir && <td className="Set__table--body--tile">{rir}</td>}
-        </tr>
-    );
-  }
-  return setsList;
-}
+
 
 export default WorkoutComp;

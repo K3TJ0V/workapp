@@ -4,6 +4,7 @@ import { Workout, WorkoutItem } from "./utils/classes";
 import WorkoutComp from "./WorkoutComp";
 import useFetchGet from "./hooks/useFetchGet";
 import searchIcon from './assets/search.svg'
+import fetchPost from "./utils/fetchPost";
 
 interface WorkoutWithItems {
   id: number;
@@ -14,6 +15,7 @@ interface WorkoutWithItems {
 function Workouts() {
   const { data, isLoading, Error } = useFetchGet("creator/workouts", "8000");
   const [workouts, setWorkouts] = useState<WorkoutWithItems[]>();
+  const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
@@ -43,11 +45,38 @@ function Workouts() {
       setWorkouts(fetchedWorkouts);
     }
   }, [data]);
+
+  async function handleWorkoutAdd(name:string){
+    if(!name) return;
+    let newWorkout : WorkoutWithItems = {
+      id : -1,
+      descriptive_name: name,
+      workout_items: []
+    };
+    const [id, result] = await fetchPost('creator/workouts', "8000", {"descriptive_name": name})
+    if(result.error){
+      console.log(result.error);
+      return;
+    }
+    newWorkout.id = id;
+    console.log(result.message);
+    if(workouts){
+      setWorkouts([...workouts, newWorkout])
+    }else{
+      setWorkouts([newWorkout])
+    }
+    setCreatorVisibility(false);
+  }
+  function handleDeletion(id: number){
+    setWorkouts(workouts?.filter((item)=>item.id !== id));
+  }
   return (
     <>
+      {creatorVisibility && <WorkoutCreator handleOnAdd={handleWorkoutAdd} setVisibility={setCreatorVisibility}/>}
       <div className="main__inpFlex">
         <button
-          className="main__addEx"
+          className="main__addWork"
+          onClick={()=>{setCreatorVisibility(true)}}
         >
           <p className="highlight">+</p>
           <br />
@@ -75,6 +104,7 @@ function Workouts() {
                 id={item.id}
                 descriptive_name={item.descriptive_name}
                 workout_items={item.workout_items}
+                handleUiUpdate={handleDeletion}
               />
             );
           })}
@@ -82,5 +112,28 @@ function Workouts() {
     </>
   );
 }
+interface WorkoutCreatorProps{
+  setVisibility:  React.Dispatch<React.SetStateAction<boolean>>;
+  handleOnAdd: (name:string) => void;
+}
+function WorkoutCreator({setVisibility, handleOnAdd} : WorkoutCreatorProps){
+  const [inputValue, setInputValue] = useState<string>("")
+
+  return(
+    <>
+      <div className="workoutCreator-background"></div>  
+      <section className="workoutCreator">
+        <button onClick={()=>{setVisibility(false)}} className="workoutCreator__close">CLOSE</button>
+        <label htmlFor="name" className="workoutCreator__label">
+          Workout name:
+          <input onChange={(e)=>{
+            setInputValue(e.target.value)
+          }} type="text" name="name" id="name" className="workoutCreator__input"/>
+        </label>
+        <button onClick={()=>{handleOnAdd(inputValue.trim())}} className="workoutCreator__add">Add</button>
+      </section>
+    </>
+  )
+} 
 
 export default Workouts;

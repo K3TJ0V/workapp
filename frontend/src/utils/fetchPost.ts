@@ -1,15 +1,18 @@
-interface PostBody{
+interface ExerciseBody{
     "name"?:string,
     "description"?:string,
     "video"?:string,
     "comment"?:string
+}
+interface WorkoutBody{
+    "descriptive_name" :string
 }
 interface returnedValue{
     "message"?: string,
     "error"?: string
 }
 
-export default async function fetchPost(endpoint:string, port:string, body:PostBody){
+export default async function fetchPost(endpoint:string, port:string, body:WorkoutBody|ExerciseBody){
     let id = null
     let result : returnedValue = {}
     const AbortCont = new AbortController()
@@ -33,12 +36,12 @@ export default async function fetchPost(endpoint:string, port:string, body:PostB
             return [null, result]
         }        
         id = res.id
-        result.message = `Item ${res.name} was created sucessfully`
+        result.message = `New item was created sucessfully`
     }catch(err:any){
         if(err.name == "AbortError"){
             console.log("post aborted");
         }else{
-            result = {"error" : err}
+            result.error = err;
         }
     }
     const delay = await new Promise(resolve => setTimeout(resolve, 2000))

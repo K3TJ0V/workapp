@@ -14,3 +14,37 @@
         grid-template-columns: 500px 500px 500px 500px;
     }
 }
+.main__addWork{
+    color: #fff;
+    font-size: 24px;
+    min-width: 200px;
+    width: 300px;
+    background: none;
+    border: 2px #0098b0 solid;
+    border-radius: 12px;
+    padding-bottom: 8px;
+    cursor: pointer;
+    transition: 0.2s all;
+}
+.main__addWork:hover{
+    background-color: #0098b090;
+}
+.workoutCreator{
+    position: absolute;
+    background-color: black;
+    height: 300px;
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+}
+.workoutCreator-background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.523);
+    z-index: 3;
+}

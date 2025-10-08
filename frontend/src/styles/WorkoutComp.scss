@@ -1,4 +1,5 @@
 .workouts__item{
+    position: relative;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -7,6 +8,24 @@
     box-shadow: 0 2px 6px rgb(7, 189, 230);
     border: 2px rgb(0, 119, 138) solid;
     box-sizing: border-box;
+    &--delete{
+        position: absolute;
+        border: 2px red solid;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        top: 10px;
+        left: 10px;
+        background: none;
+        display: grid;
+        place-items: center;
+        transition: 0.2s all;
+        cursor: pointer;
+    }
+    &--delete:hover{
+        background-color: rgba(255, 0, 0, 0.385);
+    }
     &--content{
         display: flex;
         flex-direction: column;

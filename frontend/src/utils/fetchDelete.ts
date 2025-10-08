@@ -3,7 +3,7 @@ interface returnedValue{
     "error"?: any
 }
 
-export async function fetchDelete(path:string, port: string, name:string){
+export async function fetchDelete(path:string, port: string, deleteOn: string, id?:number, name?:string){
     let result : returnedValue = {}
     
     if(!path.startsWith('/')){
@@ -18,13 +18,22 @@ export async function fetchDelete(path:string, port: string, name:string){
     if(port.endsWith('/')){
         port = port.substring(0, port.length-2) 
     }
-    if(name.split(' ').length > 1){
-        name = name.trim().replaceAll(' ', '%20')
+    let url = `http://localhost:${port.trim()}/creator` + path
+    
+    if(name !== undefined && deleteOn === "name"){
+        if(name.split(' ').length > 1){
+            name = name.trim().replaceAll(' ', '%20')
+            url += name + '/';
+        }else{
+            url += name + '/';
+        }
     }
-    const url = `http://localhost:${port.trim()}/creator` + path + name.trim() + '/'    
+    if(id !== undefined && deleteOn === "id"){        
+        url += String(id) + '/';
+    }
     try{
-        const data = await fetch(url, {method: "DELETE", headers: {"Content-Type": "application/json"}})
-        result.message = `item ${name} has been deleted succesfully`
+        const data = await fetch(url, {method: "DELETE"})
+        result.message = `Item ${name} has been deleted succesfully`
     }catch(err){
         result.error = err
     }

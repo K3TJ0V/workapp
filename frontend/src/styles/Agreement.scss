@@ -5,6 +5,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.363);
+    z-index: 4;
 }
 .agreeWindow{
     position: absolute;
@@ -18,6 +19,7 @@
     background-color: black;
     border: 2px #ffffff solid;
     box-sizing: border-box;
+    z-index: 4;
     &__title{
         margin-bottom: 0;
     }

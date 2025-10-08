@@ -24,9 +24,10 @@ function ExerciseComp({ exercises, setExercises, setSearch }: ExerciseProps) {
   const [popupData, setPopupData] = useState<popupData>();
 
   function handleOnDelete(
-    name: string | undefined,
     yes: RefObject<HTMLButtonElement | null>,
-    no: RefObject<HTMLButtonElement | null>
+    no: RefObject<HTMLButtonElement | null>,
+    name?: string | undefined,
+    id?: number | undefined
   ) {
     const deleting = async () => {
       if (!name) {
@@ -39,7 +40,7 @@ function ExerciseComp({ exercises, setExercises, setSearch }: ExerciseProps) {
       }
       yes.current.setAttribute("disabled", "");
       no.current.setAttribute("disabled", "");
-      const res = await fetchDelete(`exercises/delete/`, "8000", name);
+      const res = await fetchDelete(`exercises/delete`, "8000", "name", id, name);
       const data = await res;
       if (data.error) {
         setPopupData({ content: data.error, result: "error" });
@@ -130,6 +131,7 @@ function ExerciseComp({ exercises, setExercises, setSearch }: ExerciseProps) {
           onDelete={handleOnDelete}
           visibility={setAgreeVisibility}
           name={modifiedItem?.name}
+          id={undefined}
         />
       )}
       {editVisibility && (
