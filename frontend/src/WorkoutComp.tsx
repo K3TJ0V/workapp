@@ -41,6 +41,10 @@ function WorkoutComp({
         console.log("Something went wrong while passing workout id");
         return
       }
+      if(yes.current && no.current){
+        yes.current.setAttribute("disabled", "")
+        no.current.setAttribute("disabled", "")
+      }
       const response = await fetchDelete("workouts/delete", "8000", "id", id, descriptive_name);
       const result = await response;
       if(result.error){
