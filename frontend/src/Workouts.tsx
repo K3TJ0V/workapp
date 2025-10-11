@@ -5,6 +5,8 @@ import WorkoutComp from "./WorkoutComp";
 import useFetchGet from "./hooks/useFetchGet";
 import searchIcon from "./assets/search.svg";
 import fetchPost from "./utils/fetchPost";
+import type { popupData } from "./utils/popupData";
+import Popup from "./Popup.tsx";
 
 interface WorkoutWithItems {
   id: number;
@@ -16,6 +18,8 @@ function Workouts() {
   const { data, isLoading, Error } = useFetchGet("creator/workouts", "8000");
   const [workouts, setWorkouts] = useState<WorkoutWithItems[]>();
   const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
+  const [popupData, setPopupData] = useState<popupData>()
+  const [popup, setPopup] = useState(false)
 
   useEffect(() => {
     if (data) {
@@ -45,6 +49,13 @@ function Workouts() {
       setWorkouts(fetchedWorkouts);
     }
   }, [data]);
+  function handlePopup(content: string, result: "message" | "error"){
+      setPopupData({content: content, result: result})
+      setPopup(true)
+      setTimeout(()=>{
+        setPopup(false)
+      }, 2100)
+  }
 
   async function handleWorkoutAdd(name: string) {
     if (!name) return;
@@ -57,11 +68,11 @@ function Workouts() {
       descriptive_name: name,
     });
     if (result.error) {
-      console.log(result.error);
+      handlePopup(result.error, "error")
       return;
     }
     newWorkout.id = id;
-    console.log(result.message);
+    handlePopup(result.message, "message")
     if (workouts) {
       setWorkouts([...workouts, newWorkout]);
     } else {
@@ -74,6 +85,8 @@ function Workouts() {
   }
   return (
     <>
+      {popup && popupData &&
+      <Popup content={popupData.content} result={popupData.result}/>}
       {creatorVisibility && (
         <WorkoutCreator
           handleOnAdd={handleWorkoutAdd}
@@ -114,6 +127,7 @@ function Workouts() {
                 descriptive_name={item.descriptive_name}
                 workout_items={item.workout_items}
                 handleUiUpdate={handleDeletion}
+                showPopup={handlePopup}
               />
             );
           })}
@@ -121,6 +135,7 @@ function Workouts() {
     </>
   );
 }
+
 interface WorkoutCreatorProps {
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   handleOnAdd: (name: string) => void;

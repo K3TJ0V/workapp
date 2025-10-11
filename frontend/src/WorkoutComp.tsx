@@ -5,22 +5,28 @@ import WorkoutSetComp from "./WorkoutSetComp";
 import trash from './assets/trash.svg'
 import Agreement from "./Agreement";
 import { fetchDelete } from "./utils/fetchDelete";
+import type { popupData } from "./utils/popupData";
+import Popup from "./Popup";
 
 interface WorkoutCompProps {
   id: number;
   descriptive_name: string | undefined;
   workout_items: WorkoutItem[];
   handleUiUpdate: (id:number)=>void;
+  showPopup: (content: string, result: "message" | "error") => void
 }
 function WorkoutComp({
   id,
   descriptive_name,
   workout_items,
-  handleUiUpdate
+  handleUiUpdate,
+  showPopup
 }: WorkoutCompProps) {
   const [showList, setShowList] = useState<boolean>(false)
   const showButtonRef = useRef<HTMLButtonElement>(null)
   const [agreement, setAgreement] = useState<boolean>(false)
+  const [popupData, setPopupData] = useState<popupData>()
+  const [popup, setPopup] = useState(false)
 
   function handleOnClick(){
     setShowList(!showList)
@@ -48,10 +54,14 @@ function WorkoutComp({
       const response = await fetchDelete("workouts/delete", "8000", "id", id, descriptive_name);
       const result = await response;
       if(result.error){
+        showPopup(result.error, "error")
         console.log(result.error);
         return
       }
-      console.log(result.message);
+      if(result.message){
+        console.log(result.message);
+        showPopup(result.message, "message")
+      }
       handleUiUpdate(id)
       setAgreement(false)
     }
@@ -59,6 +69,8 @@ function WorkoutComp({
   }
   return (
     <>
+    {popup && popupData && 
+    <Popup content={popupData.content} result={popupData.result}/>}
     <article className="workouts__item">
       <button onClick={()=>{setAgreement(true)}} className="workouts__item--delete"><img src={trash} alt="trash-icon" /></button>
       <h3 className="workouts__item--name">{descriptive_name}</h3>
