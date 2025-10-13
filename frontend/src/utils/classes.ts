@@ -14,8 +14,8 @@ export class Exercise{
 }
 export class Workout{
     id:number;
-    descriptive_name:string | undefined;
-    constructor(id: number, descriptive_name?:string){
+    descriptive_name:string;
+    constructor(id: number, descriptive_name:string){
         this.id = id;
         this.descriptive_name = descriptive_name
     }

@@ -7,16 +7,18 @@ import searchIcon from "./assets/search.svg";
 import fetchPost from "./utils/fetchPost";
 import type { popupData } from "./utils/popupData";
 import Popup from "./Popup.tsx";
+import patternSearch from "./utils/patternSearch.ts";
 
 interface WorkoutWithItems {
   id: number;
-  descriptive_name: string | undefined;
+  descriptive_name: string;
   workout_items: WorkoutItem[];
 }
 
 function Workouts() {
   const { data, isLoading, Error } = useFetchGet("creator/workouts", "8000");
   const [workouts, setWorkouts] = useState<WorkoutWithItems[]>();
+  const [searchBackup, setSearchBackup] = useState<WorkoutWithItems[]>();
   const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
   const [popupData, setPopupData] = useState<popupData>()
   const [popup, setPopup] = useState(false)
@@ -47,6 +49,7 @@ function Workouts() {
         fetchedWorkouts.push(result);
       });
       setWorkouts(fetchedWorkouts);
+      setSearchBackup(fetchedWorkouts);
     }
   }, [data]);
   function handlePopup(content: string, result: "message" | "error"){
@@ -55,6 +58,15 @@ function Workouts() {
       setTimeout(()=>{
         setPopup(false)
       }, 2100)
+  }
+  function handleSearch(e : React.ChangeEvent<HTMLInputElement>){
+    if(e.target.value.trim() === ""){
+      setWorkouts(searchBackup);
+      return;
+    }
+    setWorkouts(searchBackup?.filter((item)=>
+        patternSearch(e.target.value.trim(), item.descriptive_name)
+    ))
   }
 
   async function handleWorkoutAdd(name: string) {
@@ -75,13 +87,16 @@ function Workouts() {
     handlePopup(result.message, "message")
     if (workouts) {
       setWorkouts([...workouts, newWorkout]);
+      setSearchBackup([...workouts, newWorkout])
     } else {
       setWorkouts([newWorkout]);
+      setSearchBackup([newWorkout])
     }
     setCreatorVisibility(false);
   }
   function handleDeletion(id: number) {
     setWorkouts(workouts?.filter((item) => item.id !== id));
+    setSearchBackup(workouts)
   }
   return (
     <>
@@ -111,6 +126,7 @@ function Workouts() {
             name="search"
             id="search"
             placeholder="Name of the workout"
+            onChange={(e)=>{handleSearch(e)}}
           />
           <img src={searchIcon} alt="search icon" className="searchIcon" />
         </label>
