@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles/Workouts.scss";
 import { WorkoutItem } from "./utils/classes";
 import WorkoutComp from "./WorkoutComp";
@@ -8,6 +8,7 @@ import fetchPost from "./utils/fetchPost";
 import type { popupData } from "./utils/popupData";
 import Popup from "./Popup.tsx";
 import patternSearch from "./utils/patternSearch.ts";
+import WorkoutCreator from "./WorkoutCreator.tsx";
 
 interface WorkoutWithItems {
   id: number;
@@ -20,8 +21,8 @@ function Workouts() {
   const [workouts, setWorkouts] = useState<WorkoutWithItems[]>();
   const [searchBackup, setSearchBackup] = useState<WorkoutWithItems[]>();
   const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
-  const [popupData, setPopupData] = useState<popupData>()
-  const [popup, setPopup] = useState(false)
+  const [popupData, setPopupData] = useState<popupData>();
+  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -52,21 +53,37 @@ function Workouts() {
       setSearchBackup(fetchedWorkouts);
     }
   }, [data]);
-  function handlePopup(content: string, result: "message" | "error"){
-      setPopupData({content: content, result: result})
-      setPopup(true)
-      setTimeout(()=>{
-        setPopup(false)
-      }, 2100)
+  function handlePopup(content: string, result: "message" | "error") {
+    setPopupData({ content: content, result: result });
+    setPopup(true);
+    setTimeout(() => {
+      setPopup(false);
+    }, 2100);
   }
-  function handleSearch(e : React.ChangeEvent<HTMLInputElement>){
-    if(e.target.value.trim() === ""){
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.value.trim() === "") {
       setWorkouts(searchBackup);
       return;
     }
-    setWorkouts(searchBackup?.filter((item)=>
+    setWorkouts(
+      searchBackup?.filter((item) =>
         patternSearch(e.target.value.trim(), item.descriptive_name)
-    ))
+      )
+    );
+  }
+  function handleWorkoutItemAdd(workId: number, newWorkoutItem: WorkoutItem) {
+    const newWorkoutList = workouts?.map((workout) => {
+      if (workout.id === workId) {
+        workout.workout_items = [...workout.workout_items, newWorkoutItem];
+        return workout;
+      } else {
+        return workout;
+      }
+    });
+    setWorkouts(newWorkoutList);
+  }
+  function handleWorkoutItemDelete(){
+    
   }
 
   async function handleWorkoutAdd(name: string) {
@@ -80,28 +97,29 @@ function Workouts() {
       descriptive_name: name,
     });
     if (result.error) {
-      handlePopup(result.error, "error")
+      handlePopup(result.error, "error");
       return;
     }
     newWorkout.id = id;
-    handlePopup(result.message, "message")
+    handlePopup(result.message, "message");
     if (workouts) {
       setWorkouts([...workouts, newWorkout]);
-      setSearchBackup([...workouts, newWorkout])
+      setSearchBackup([...workouts, newWorkout]);
     } else {
       setWorkouts([newWorkout]);
-      setSearchBackup([newWorkout])
+      setSearchBackup([newWorkout]);
     }
     setCreatorVisibility(false);
   }
-  function handleDeletion(id: number) {
+  function handleWorkoutDelete(id: number) {
     setWorkouts(workouts?.filter((item) => item.id !== id));
-    setSearchBackup(workouts)
+    setSearchBackup(workouts);
   }
   return (
     <>
-      {popup && popupData &&
-      <Popup content={popupData.content} result={popupData.result}/>}
+      {popup && popupData && (
+        <Popup content={popupData.content} result={popupData.result} />
+      )}
       {creatorVisibility && (
         <WorkoutCreator
           handleOnAdd={handleWorkoutAdd}
@@ -126,7 +144,9 @@ function Workouts() {
             name="search"
             id="search"
             placeholder="Name of the workout"
-            onChange={(e)=>{handleSearch(e)}}
+            onChange={(e) => {
+              handleSearch(e);
+            }}
           />
           <img src={searchIcon} alt="search icon" className="searchIcon" />
         </label>
@@ -142,86 +162,12 @@ function Workouts() {
                 id={item.id}
                 descriptive_name={item.descriptive_name}
                 workout_items={item.workout_items}
-                handleUiUpdate={handleDeletion}
+                handleUiUpdate={handleWorkoutDelete}
                 showPopup={handlePopup}
+                handleWorkoutItemAdd={handleWorkoutItemAdd}
               />
             );
           })}
-      </section>
-    </>
-  );
-}
-
-interface WorkoutCreatorProps {
-  setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
-  handleOnAdd: (name: string) => void;
-}
-function WorkoutCreator({ setVisibility, handleOnAdd }: WorkoutCreatorProps) {
-  const [inputValue, setInputValue] = useState<string>("");
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const addRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const placeholderRef = useRef<HTMLDivElement>(null)
-
-  function handleInputFocus(){
-    if(placeholderRef.current !== null){
-      placeholderRef.current.classList.add("focusedPlaceholder")
-    }
-  }
-  function handleInputBlur(e: React.FocusEvent<HTMLInputElement, Element>){
-    if(e.target.value.length !== 0){
-      return
-    }
-    if(placeholderRef.current !== null){
-      placeholderRef.current.classList.remove("focusedPlaceholder")
-    }
-  }
-  return (
-    <>
-      <div className="workoutCreator-background"></div>
-      <section className="workoutCreator">
-        <button
-          onClick={() => {
-            setVisibility(false);
-          }}
-          className="workoutCreator__close"
-          ref={closeRef}
-        >
-          CLOSE
-        </button>
-        <label htmlFor="name" className="workoutCreator__label">
-          Type in workout name:
-        </label>
-        <div className="inputRelativePosition">
-        <input
-          ref={inputRef}
-          onFocus={handleInputFocus}
-          onBlur={(e)=>{handleInputBlur(e)}}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-          }}
-          type="text"
-          name="name"
-          id="name"
-          className="workoutCreator__input"
-        />
-        <div ref={placeholderRef} className="inputRelativePosition__placeholder">name</div>
-        </div>
-        <button
-          onClick={async () => {
-            if(!closeRef.current || !addRef.current || !inputRef.current){
-              return
-            }
-            closeRef.current.setAttribute("disabled", "")
-            addRef.current.setAttribute("disabled", "")
-            inputRef.current.setAttribute("disabled", "")
-            await handleOnAdd(inputValue.trim());
-          }}
-          className="workoutCreator__add"
-          ref={addRef}
-        >
-          Add
-        </button>
       </section>
     </>
   );

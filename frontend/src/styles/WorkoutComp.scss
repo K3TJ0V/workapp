@@ -26,6 +26,20 @@
     &--delete:hover{
         background-color: rgba(255, 0, 0, 0.385);
     }
+    &--addNew{
+        color: #fff;
+        width: 50%;
+        background: linear-gradient(180deg,rgb(0, 101, 142) 0%, rgb(0, 184, 190) 100%);
+        border: none;
+        padding: 5px;
+        font-weight: bold;
+        border-radius: 16px;
+        transition: 0.1s all;
+        cursor: pointer;
+    }
+    &--addNew:hover{
+        transform: scale(1.1);
+    }
     &--content{
         display: flex;
         flex-direction: column;
@@ -65,4 +79,12 @@
 }
 .listShown{
     transform: rotate(0);
+}
+.workItem-addButto-center{
+    width: 100%;
+    display: grid;
+    place-items: center;
+}
+.workoutList-separator{
+    width: 100%;
 }

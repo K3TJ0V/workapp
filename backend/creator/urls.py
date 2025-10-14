@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('exercises/', views.ExList.as_view()),
+    path('exercises/show-only-id-and-name/', views.ExShowIdAndName.as_view()),
     path('exercises/add/', views.ExAdd.as_view()),
     path('exercises/show/<str:name>/', views.ExShowUpdateDelete.as_view()),
     path('exercises/update/<str:name>/', views.ExShowUpdateDelete.as_view()),

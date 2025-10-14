@@ -7,12 +7,22 @@ interface ExerciseBody{
 interface WorkoutBody{
     "descriptive_name" :string
 }
+interface WorkoutItemBody{
+    sets: number;
+    exercise: string;
+    workout: number;
+    weight?: number | undefined;
+    reps?: number | undefined;
+    time?: number | undefined;
+    tempo?: string | undefined;
+    rir?: string | undefined;
+}
 interface returnedValue{
     "message"?: string,
     "error"?: string
 }
 
-export default async function fetchPost(endpoint:string, port:string, body:WorkoutBody|ExerciseBody){
+export default async function fetchPost(endpoint:string, port:string, body:WorkoutBody|ExerciseBody|WorkoutItemBody){
     let id = null
     let result : returnedValue = {}
     const AbortCont = new AbortController()

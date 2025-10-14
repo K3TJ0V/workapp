@@ -4,7 +4,7 @@ from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Exercise, Workout, WorkoutItem
-from .serializers import ExSerializer, WorkoutSerializer, WorkoutItemSerializer
+from .serializers import ExSerializer, WorkoutSerializer, WorkoutItemSerializer, ExOnlyIdAndNameSerializer
 
 
 class ExList(APIView):
@@ -12,7 +12,11 @@ class ExList(APIView):
         queryset = Exercise.objects.all()
         serializer = ExSerializer(queryset, many=True)
         return Response(serializer.data)
-
+class ExShowIdAndName(APIView):
+    def get(self, request):
+        queryset = Exercise.objects.all()
+        serializer = ExOnlyIdAndNameSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class ExAdd(APIView):
     def post(self, request):

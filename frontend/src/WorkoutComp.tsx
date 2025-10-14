@@ -7,24 +7,28 @@ import Agreement from "./Agreement";
 import { fetchDelete } from "./utils/fetchDelete";
 import type { popupData } from "./utils/popupData";
 import Popup from "./Popup";
+import WorkoutItemCreator from "./WorkoutItemCreator";
 
 interface WorkoutCompProps {
   id: number;
   descriptive_name: string | undefined;
   workout_items: WorkoutItem[];
   handleUiUpdate: (id:number)=>void;
-  showPopup: (content: string, result: "message" | "error") => void
+  showPopup: (content: string, result: "message" | "error") => void,
+  handleWorkoutItemAdd: (workId: number, newItem : WorkoutItem) => void;
 }
 function WorkoutComp({
   id,
   descriptive_name,
   workout_items,
   handleUiUpdate,
-  showPopup
+  showPopup,
+  handleWorkoutItemAdd
 }: WorkoutCompProps) {
   const [showList, setShowList] = useState<boolean>(false)
   const showButtonRef = useRef<HTMLButtonElement>(null)
   const [agreement, setAgreement] = useState<boolean>(false)
+  const [workoutItemCreatorVisibility, setWorkoutItemCreatorVisibility] = useState(false);
   const [popupData, setPopupData] = useState<popupData>()
   const [popup, setPopup] = useState(false)
 
@@ -71,15 +75,26 @@ function WorkoutComp({
     <>
     {popup && popupData && 
     <Popup content={popupData.content} result={popupData.result}/>}
+    {workoutItemCreatorVisibility && <WorkoutItemCreator 
+      workoutId={id}
+      visibilitySetter={setWorkoutItemCreatorVisibility}
+      handleWorkoutItemAdd={handleWorkoutItemAdd}/>
+      }
     <article className="workouts__item">
       <button onClick={()=>{setAgreement(true)}} className="workouts__item--delete"><img src={trash} alt="trash-icon" /></button>
       <h3 className="workouts__item--name">{descriptive_name}</h3>
       {showList &&
+      <>
+      <div className="workItem-addButto-center">
+        <button onClick={()=>{setWorkoutItemCreatorVisibility(!workoutItemCreatorVisibility)}} className="workouts__item--addNew">Add new</button>
+      </div>
+      <hr className="workoutList-separator"/>
       <section className="workouts__item--content">
         {workout_items.map((set) => {
           return <WorkoutSetComp key={set.id} set={set}/>
         })}
       </section>
+      </>
     }
     <div className="buttonFlex">
       <button ref={showButtonRef} className="workouts__item--showButton" onClick={handleOnClick}>{">"}</button>

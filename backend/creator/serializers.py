@@ -8,6 +8,11 @@ class ExSerializer(serializers.ModelSerializer):
         model = Exercise
         fields = ['id', 'name', 'description', 'video', 'comment']
 
+class ExOnlyIdAndNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exercise
+        fields = ['id', 'name']
+
 
 class WorkoutItemSerializer(serializers.ModelSerializer):
     exercise = serializers.SlugRelatedField(
