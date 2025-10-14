@@ -1,10 +1,10 @@
 import type { WorkoutItem } from "./utils/classes";
 import './styles/WorkoutComp.scss'
 import { useRef, useState, type RefObject } from "react";
-import WorkoutSetComp from "./WorkoutSetComp";
+import WorkoutItemComp from "./WorkoutItemComp";
 import trash from './assets/trash.svg'
 import Agreement from "./Agreement";
-import { fetchDelete } from "./utils/fetchDelete";
+import { fetchDelete } from "./fetchers/fetchDelete";
 import type { popupData } from "./utils/popupData";
 import Popup from "./Popup";
 import WorkoutItemCreator from "./WorkoutItemCreator";
@@ -16,6 +16,7 @@ interface WorkoutCompProps {
   handleUiUpdate: (id:number)=>void;
   showPopup: (content: string, result: "message" | "error") => void,
   handleWorkoutItemAdd: (workId: number, newItem : WorkoutItem) => void;
+  handleWorkoutItemDeletion : (workoutId: number , workoutItemId: number) => void;
 }
 function WorkoutComp({
   id,
@@ -23,7 +24,8 @@ function WorkoutComp({
   workout_items,
   handleUiUpdate,
   showPopup,
-  handleWorkoutItemAdd
+  handleWorkoutItemAdd,
+  handleWorkoutItemDeletion
 }: WorkoutCompProps) {
   const [showList, setShowList] = useState<boolean>(false)
   const showButtonRef = useRef<HTMLButtonElement>(null)
@@ -91,7 +93,7 @@ function WorkoutComp({
       <hr className="workoutList-separator"/>
       <section className="workouts__item--content">
         {workout_items.map((set) => {
-          return <WorkoutSetComp key={set.id} set={set}/>
+          return <WorkoutItemComp key={set.id} workoutItem={set}/>
         })}
       </section>
       </>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import './styles/ExCreator.scss'
-import fetchPost from './utils/fetchPost';
+import fetchPost from './fetchers/fetchPost';
 import { Exercise } from './utils/classes';
 import Popup from './Popup';
 import type { popupData } from './utils/popupData';

@@ -1,25 +1,16 @@
 import { useEffect, useState } from "react";
 import "./styles/WorkoutItemCreator.scss";
-import { fetchExIdAndName } from "./utils/fetchExIdAndName";
+import { fetchExIdAndName } from "./fetchers/fetchExIdAndName";
 import type { IdAndName } from "./utils/ExIdAndName";
-import fetchPost from "./utils/fetchPost";
 import { WorkoutItem } from "./utils/classes";
+import { validateWorkoutItemFormAndFetch } from "./utils/validateWorkoutItemForm";
 
 interface WorkoutItemCreatorProps {
   workoutId: number;
   visibilitySetter: React.Dispatch<React.SetStateAction<boolean>>;
   handleWorkoutItemAdd: (workId: number, newItem: WorkoutItem) => void;
 }
-interface PostBody {
-  exercise: string;
-  sets: number;
-  workout: number;
-  weight?: number;
-  reps?: number;
-  time?: number;
-  tempo?: string;
-  rir?: string;
-}
+
 function WorkoutItemCreator({
   workoutId,
   visibilitySetter,
@@ -37,44 +28,15 @@ function WorkoutItemCreator({
     };
     fetchExes();
   }, []);
+
   async function handleFormSubmit(items: FormData) {
-    let fetchData: PostBody = {
-      exercise: "",
-      sets: 0,
-      workout: 0,
-    };
-    fetchData.workout = workoutId;
-    fetchData.exercise = String(items.get("exercise"));
-    fetchData.sets = parseInt(String(items.get("sets")));
-    items.get("weight")
-      ? (fetchData.weight = parseInt(String(items.get("weight"))))
-      : null;
-    items.get("reps")
-      ? (fetchData.reps = parseInt(String(items.get("reps"))))
-      : null;
-    items.get("time")
-      ? (fetchData.time = parseInt(String(items.get("time"))))
-      : null;
-    items.get("tempo") ? (fetchData.tempo = String(items.get("tempo"))) : null;
-    items.get("rir") ? (fetchData.rir = String(items.get("rir"))) : null;
-    const [id, result] = await fetchPost(
-      "creator/work-item",
-      "8000",
-      fetchData
-    );
-    const newWorkoutItem = new WorkoutItem(
-      id,
-      fetchData.sets,
-      fetchData.exercise,
-      fetchData.workout,
-      fetchData.weight,
-      fetchData.reps,
-      fetchData.time,
-      fetchData.tempo,
-      fetchData.rir
-    );
-    handleWorkoutItemAdd(workoutId, newWorkoutItem);
+    // validate and perform fetch
+    const validatedWorkoutItem = await validateWorkoutItemFormAndFetch(items, workoutId)
+    if(validatedWorkoutItem){
+      handleWorkoutItemAdd(workoutId, validatedWorkoutItem);
+    }
   }
+
   return (
     <div className="workoutItemCreator">
       <section className="workoutItemCreator__window">
@@ -143,11 +105,4 @@ function WorkoutItemCreator({
 }
 
 export default WorkoutItemCreator;
-//     sets: number;
-//     exercise: string;
-//     workout: number;
-//     weight: number | undefined;
-//     reps: number | undefined;
-//     time: number | undefined;
-//     private _tempo: string | undefined;
-//     private _rir : string | undefined;
+

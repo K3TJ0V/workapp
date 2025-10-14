@@ -6,7 +6,7 @@ import edit from "./assets/edit.svg";
 import "./styles/ExerciseComp.scss";
 import { useState, type RefObject } from "react";
 import ExEdit from "./ExEdit.tsx";
-import { fetchDelete } from "./utils/fetchDelete.ts";
+import { fetchDelete } from "./fetchers/fetchDelete.ts";
 import Popup from "./Popup.tsx";
 import type { popupData } from "./utils/popupData.ts";
 

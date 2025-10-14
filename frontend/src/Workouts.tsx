@@ -4,7 +4,7 @@ import { WorkoutItem } from "./utils/classes";
 import WorkoutComp from "./WorkoutComp";
 import useFetchGet from "./hooks/useFetchGet";
 import searchIcon from "./assets/search.svg";
-import fetchPost from "./utils/fetchPost";
+import fetchPost from "./fetchers/fetchPost.ts";
 import type { popupData } from "./utils/popupData";
 import Popup from "./Popup.tsx";
 import patternSearch from "./utils/patternSearch.ts";
@@ -71,9 +71,9 @@ function Workouts() {
       )
     );
   }
-  function handleWorkoutItemAdd(workId: number, newWorkoutItem: WorkoutItem) {
+  function handleWorkoutItemAdd(workoutId: number, newWorkoutItem: WorkoutItem) {
     const newWorkoutList = workouts?.map((workout) => {
-      if (workout.id === workId) {
+      if (workout.id === workoutId) {
         workout.workout_items = [...workout.workout_items, newWorkoutItem];
         return workout;
       } else {
@@ -81,9 +81,19 @@ function Workouts() {
       }
     });
     setWorkouts(newWorkoutList);
+    setSearchBackup(newWorkoutList)
   }
-  function handleWorkoutItemDelete(){
-    
+  function handleWorkoutItemDelete(workoutId: number , workoutItemId: number){
+    const newWorkoutList = workouts?.map((workout)=>{
+      if(workout.id === workoutId){
+        workout.workout_items = workout.workout_items.filter((workoutItem) => workoutItem.id !== workoutItemId)
+        return workout;
+      }else{
+        return workout
+      }
+    })    
+    setWorkouts(newWorkoutList)
+    setSearchBackup(newWorkoutList)
   }
 
   async function handleWorkoutAdd(name: string) {
@@ -165,6 +175,7 @@ function Workouts() {
                 handleUiUpdate={handleWorkoutDelete}
                 showPopup={handlePopup}
                 handleWorkoutItemAdd={handleWorkoutItemAdd}
+                handleWorkoutItemDeletion={handleWorkoutItemDelete}
               />
             );
           })}

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import './styles/ExEdit.scss'
 import type { Exercise } from './utils/classes'
-import { fetchPut } from './utils/fetchPut';
+import { fetchPut } from './fetchers/fetchPut';
 import Popup from './Popup';
 import type { popupData } from './utils/popupData';
 
