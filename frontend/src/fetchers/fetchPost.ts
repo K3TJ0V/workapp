@@ -32,7 +32,7 @@ export default async function fetchPost(endpoint:string, port:string, body:Worko
     if(!endpoint.endsWith('/')){
         endpoint = endpoint + '/'
     }
-    let path = 'http://localhost:' + port.trim() + endpoint.trim() + 'add/' 
+    let path = `http://localhost:${port.trim()}/creator` + endpoint.trim() + 'add/' 
     try{
         const response = await fetch(path, 
             {method:"POST",

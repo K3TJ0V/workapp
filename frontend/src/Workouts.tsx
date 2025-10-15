@@ -103,7 +103,7 @@ function Workouts() {
       descriptive_name: name,
       workout_items: [],
     };
-    const [id, result] = await fetchPost("creator/workouts", "8000", {
+    const [id, result] = await fetchPost("workouts/", "8000", {
       descriptive_name: name,
     });
     if (result.error) {

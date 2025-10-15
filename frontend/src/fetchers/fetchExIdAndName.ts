@@ -1,4 +1,4 @@
-import type { IdAndName } from "./ExIdAndName";
+import type { IdAndName } from "../utils/ExIdAndName";
 
 interface result<T>{
     error: boolean,

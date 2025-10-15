@@ -30,7 +30,7 @@ function ExCreator({setVisibility, handleExAdd}: ExCreatorProps){
         const postItem = async () => {
             submitRef.current!.setAttribute("disabled", "")
             closeRef.current!.setAttribute("disabled", "")
-            const [id, result] = await fetchPost("/creator/exercises/", "8000", postData)
+            const [id, result] = await fetchPost("exercises/", "8000", postData)
             if(result.error){
                 setPopup(true)
                 setPopupData({content: result.error, result: "error"})
