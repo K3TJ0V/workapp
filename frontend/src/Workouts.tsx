@@ -9,50 +9,21 @@ import type { popupData } from "./utils/popupData";
 import Popup from "./Popup.tsx";
 import patternSearch from "./utils/patternSearch.ts";
 import WorkoutCreator from "./WorkoutCreator.tsx";
-
-interface WorkoutWithItems {
-  id: number;
-  descriptive_name: string;
-  workout_items: WorkoutItem[];
-}
+import type { WorkoutWithItems } from "./utils/WorkoutWithItems.ts";
 
 function Workouts() {
-  const { data, isLoading, Error } = useFetchGet("creator/workouts", "8000");
-  const [workouts, setWorkouts] = useState<WorkoutWithItems[]>();
-  const [searchBackup, setSearchBackup] = useState<WorkoutWithItems[]>();
+  const { data, setData, isLoading, Error } = useFetchGet<WorkoutWithItems>("workouts", "8000");
+  const [search, setSearch] = useState<WorkoutWithItems[]>([]);
   const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
   const [popupData, setPopupData] = useState<popupData>();
   const [popup, setPopup] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      let fetchedWorkouts: WorkoutWithItems[] = [];
-      data.forEach((work: WorkoutWithItems) => {
-        let result: WorkoutWithItems = {
-          id: work.id,
-          descriptive_name: work.descriptive_name,
-          workout_items: [],
-        };
-        work.workout_items.forEach((item: WorkoutItem) => {
-          const newItem = new WorkoutItem(
-            item.id,
-            item.sets,
-            item.exercise,
-            item.workout
-          );
-          item.weight ? (newItem.weight = item.weight) : null;
-          item.reps ? (newItem.reps = item.reps) : null;
-          item.time ? (newItem.time = item.time) : null;
-          item.tempo ? (newItem.tempo = item.tempo) : null;
-          item.rir ? (newItem.rir = item.rir) : null;
-          result.workout_items.push(newItem);
-        });
-        fetchedWorkouts.push(result);
-      });
-      setWorkouts(fetchedWorkouts);
-      setSearchBackup(fetchedWorkouts);
+  useEffect(()=>{
+    if(data){
+      setSearch(data)
     }
-  }, [data]);
+  }, [data])
+
   function handlePopup(content: string, result: "message" | "error") {
     setPopupData({ content: content, result: result });
     setPopup(true);
@@ -60,19 +31,20 @@ function Workouts() {
       setPopup(false);
     }, 2100);
   }
+
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.value.trim() === "") {
-      setWorkouts(searchBackup);
+      setSearch(data);
       return;
     }
-    setWorkouts(
-      searchBackup?.filter((item) =>
+    setSearch(
+      data?.filter((item) =>
         patternSearch(e.target.value.trim(), item.descriptive_name)
       )
     );
   }
   function handleWorkoutItemAdd(workoutId: number, newWorkoutItem: WorkoutItem) {
-    const newWorkoutList = workouts?.map((workout) => {
+    const newWorkoutList = data?.map((workout) => {
       if (workout.id === workoutId) {
         workout.workout_items = [...workout.workout_items, newWorkoutItem];
         return workout;
@@ -80,11 +52,11 @@ function Workouts() {
         return workout;
       }
     });
-    setWorkouts(newWorkoutList);
-    setSearchBackup(newWorkoutList)
+    setData(newWorkoutList);
+    setSearch(newWorkoutList)
   }
   function handleWorkoutItemDelete(workoutId: number , workoutItemId: number){
-    const newWorkoutList = workouts?.map((workout)=>{
+    const newWorkoutList = data?.map((workout)=>{
       if(workout.id === workoutId){
         workout.workout_items = workout.workout_items.filter((workoutItem) => workoutItem.id !== workoutItemId)
         return workout;
@@ -92,8 +64,8 @@ function Workouts() {
         return workout
       }
     })    
-    setWorkouts(newWorkoutList)
-    setSearchBackup(newWorkoutList)
+    setData(newWorkoutList)
+    setSearch(newWorkoutList)
   }
 
   async function handleWorkoutAdd(name: string) {
@@ -112,18 +84,18 @@ function Workouts() {
     }
     newWorkout.id = id;
     handlePopup(result.message, "message");
-    if (workouts) {
-      setWorkouts([...workouts, newWorkout]);
-      setSearchBackup([...workouts, newWorkout]);
+    if (data) {
+      setData([...data, newWorkout]);
+      setSearch([...data, newWorkout]);
     } else {
-      setWorkouts([newWorkout]);
-      setSearchBackup([newWorkout]);
+      setData([newWorkout]);
+      setSearch([newWorkout]);
     }
     setCreatorVisibility(false);
   }
   function handleWorkoutDelete(id: number) {
-    setWorkouts(workouts?.filter((item) => item.id !== id));
-    setSearchBackup(workouts);
+    setData(data?.filter((item) => item.id !== id));
+    setSearch(data);
   }
   return (
     <>
@@ -164,8 +136,8 @@ function Workouts() {
       <section className="workouts">
         {isLoading && <p>Loading...</p>}
         {Error && "Error while downloading content"}
-        {workouts &&
-          workouts.map((item) => {
+        {search &&
+          search.map((item) => {
             return (
               <WorkoutComp
                 key={item.id}

@@ -8,33 +8,25 @@ import patternSearch from './utils/patternSearch'
 import ExCreator from './ExCreator'
 
 function ExerciseBase() {
-  const {data, isLoading, Error} = useFetchGet('creator/exercises', '8000')
-  const [exercises, setExercises] = useState<Exercise[]>([])
+  const {data, setData, isLoading, Error} = useFetchGet<Exercise>('exercises', '8000')
   const [search, setSearch] = useState<Exercise[]>([])
   const [creaotrVisibility, setCreaotrVisibility] = useState(false)
 
   useEffect(()=>{
-    const result:Exercise[] = []
-    if(data){
-      data.forEach((item:Exercise)=>{
-        const newEx = new Exercise(item.id, item.name, item.description, item.video, item.comment)
-        result.push(newEx)
-      })
-    }else if(Error){
+    if(Error){
       console.log(Error);
     }
-    setExercises(result)
-    setSearch(result)
+    setSearch(data)
   }, [data])
 
   function handleExAdd(newEx:Exercise){
-    setExercises([...exercises, newEx])
+    setData([...data, newEx])
     setSearch([...search, newEx])
   }
 
   function handleOnChange(e:ChangeEvent<HTMLInputElement>){
     const pattern = e.target.value
-    setSearch(exercises.filter((ex)=> patternSearch(pattern, ex.name)))    
+    setSearch(data.filter((ex)=> patternSearch(pattern, ex.name)))    
   }
   
   return (
@@ -47,7 +39,7 @@ function ExerciseBase() {
       </label>
       </div>
       {isLoading && <p>Loading....</p>}
-      {data && <ExerciseComp setSearch={setSearch} setExercises={setExercises} exercises={search}/>}
+      {data && <ExerciseComp setSearch={setSearch} setExercises={setData} exercises={search}/>}
       {creaotrVisibility && <ExCreator handleExAdd={handleExAdd} setVisibility={setCreaotrVisibility}/>}
     </>
   )
