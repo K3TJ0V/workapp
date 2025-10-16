@@ -1,4 +1,3 @@
-import fetchPost from "../fetchers/fetchPost";
 import { WorkoutItem } from "./classes";
 
 interface PostBody {
@@ -11,7 +10,7 @@ interface PostBody {
   tempo?: string;
   rir?: string;
 }
-export async function validateWorkoutItemFormAndFetch(items:FormData, workoutId: number) {
+export async function validateWorkoutItemForm(items:FormData, workoutId: number) {
     let fetchData: PostBody = {
       exercise: "",
       sets: 0,
@@ -35,21 +34,5 @@ export async function validateWorkoutItemFormAndFetch(items:FormData, workoutId:
       : null;
     items.get("tempo") ? (fetchData.tempo = String(items.get("tempo"))) : null;
     items.get("rir") ? (fetchData.rir = String(items.get("rir"))) : null;
-    const [id] = await fetchPost(
-      "creator/work-item",
-      "8000",
-      fetchData
-    );
-    const newWorkoutItem = new WorkoutItem(
-      id,
-      fetchData.sets,
-      fetchData.exercise,
-      fetchData.workout,
-      fetchData.weight,
-      fetchData.reps,
-      fetchData.time,
-      fetchData.tempo,
-      fetchData.rir
-    );
-    return newWorkoutItem;
+
 }

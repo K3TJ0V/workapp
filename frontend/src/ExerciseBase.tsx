@@ -22,6 +22,7 @@ function ExerciseBase() {
   function handleExAdd(newEx:Exercise){
     setData([...data, newEx])
     setSearch([...search, newEx])
+    setCreaotrVisibility(false)
   }
 
   function handleOnChange(e:ChangeEvent<HTMLInputElement>){

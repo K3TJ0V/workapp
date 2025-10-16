@@ -3,7 +3,7 @@ import "./styles/WorkoutItemCreator.scss";
 import { fetchExIdAndName } from "./fetchers/fetchExIdAndName";
 import type { IdAndName } from "./utils/ExIdAndName";
 import { WorkoutItem } from "./utils/classes";
-import { validateWorkoutItemFormAndFetch } from "./utils/validateWorkoutItemForm";
+import { validateWorkoutItemForm } from "./utils/validateWorkoutItemForm";
 
 interface WorkoutItemCreatorProps {
   workoutId: number;
@@ -30,11 +30,8 @@ function WorkoutItemCreator({
   }, []);
 
   async function handleFormSubmit(items: FormData) {
-    // validate and perform fetch
-    const validatedWorkoutItem = await validateWorkoutItemFormAndFetch(items, workoutId)
-    if(validatedWorkoutItem){
-      handleWorkoutItemAdd(workoutId, validatedWorkoutItem);
-    }
+    // validate
+
   }
 
   return (

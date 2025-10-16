@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { handleWorkoutWithItems } from "../utils/handleWorkoutWithItemsFetch";
+import { handleWorkoutWithItemsFetch } from "../utils/handleWorkoutWithItemsFetch";
 import { handleExercisesFetch } from "../utils/handleExercisesFetch";
 import { fetchTypeCheck } from "../utils/fetchTypeCheck";
 
@@ -26,7 +26,7 @@ const useFetchGet = <T>(url: string, port: string) => {
           const result = await response.json();
           switch (fetchTypeCheck(result)) {
             case "WorkoutWithItems": {
-              const state = handleWorkoutWithItems(result);
+              const state = handleWorkoutWithItemsFetch(result);
               setData(state as T[]);
               break;
             }

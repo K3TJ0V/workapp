@@ -7,7 +7,7 @@ interface WorkoutCreatorProps {
   udpateUI: (newItem: WorkoutWithItems) => void;
 }
 function WorkoutCreator({ setVisibility, udpateUI }: WorkoutCreatorProps) {
-  const { returnedItem, loading, postError, setBody } = useFetchPost<any>('workouts', "8000")
+  const { returnedItem, loading, postError, setBody } = useFetchPost<WorkoutWithItems>('workouts', "8000")
   const [inputValue, setInputValue] = useState<string>("");
 
 
@@ -46,7 +46,6 @@ function WorkoutCreator({ setVisibility, udpateUI }: WorkoutCreatorProps) {
   }
   return (
     <>
-      {loading && "laduje sie"}
       <div className="workoutCreator-background"></div>
       <section className="workoutCreator">
         <button
@@ -78,13 +77,15 @@ function WorkoutCreator({ setVisibility, udpateUI }: WorkoutCreatorProps) {
         </div>
         <button
           onClick={() => {
-           setBody({descriptive_name: inputValue})
+           setBody(({descriptive_name: inputValue} as WorkoutWithItems))
           }}
           className="workoutCreator__add"
           ref={addRef}
         >
           Add
         </button>
+        {loading && "laduje sie"}
+
       </section>
     </>
   );

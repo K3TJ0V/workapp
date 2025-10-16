@@ -1,14 +1,10 @@
 import type { Exercise } from "./utils/classes";
-import Agreement from "./Agreement";
 import play from "./assets/play.svg";
 import trash from "./assets/trash.svg";
 import edit from "./assets/edit.svg";
 import "./styles/ExerciseComp.scss";
-import { useState, type RefObject } from "react";
+import { useState } from "react";
 import ExEdit from "./ExEdit.tsx";
-import { fetchDelete } from "./fetchers/fetchDelete.ts";
-import Popup from "./Popup.tsx";
-import type { popupData } from "./utils/popupData.ts";
 
 interface ExerciseProps {
   exercises: Exercise[];
@@ -17,63 +13,11 @@ interface ExerciseProps {
 }
 
 function ExerciseComp({ exercises, setExercises, setSearch }: ExerciseProps) {
-  const [agreeVisibility, setAgreeVisibility] = useState<boolean>(false);
   const [modifiedItem, setModifiedItem] = useState<Exercise>();
   const [editVisibility, setEditVisibility] = useState<boolean>(false);
-  const [popup, setPopup] = useState<boolean>(false);
-  const [popupData, setPopupData] = useState<popupData>();
-
-  function handleOnDelete(
-    yes: RefObject<HTMLButtonElement | null>,
-    no: RefObject<HTMLButtonElement | null>,
-    name?: string | undefined,
-    id?: number | undefined
-  ) {
-    const deleting = async () => {
-      if (!name) {
-        setAgreeVisibility(false);
-        return "ERROR: name is not declared";
-      }
-      if (!yes.current || !no.current) {
-        setAgreeVisibility(false);
-        return "One or both of buttons doesn't exist";
-      }
-      yes.current.setAttribute("disabled", "");
-      no.current.setAttribute("disabled", "");
-      const res = await fetchDelete(`exercises/delete`, "8000", "name", id, name);
-      const data = await res;
-      if (data.error) {
-        setPopupData({ content: data.error, result: "error" });
-        setPopup(true);
-        setTimeout(() => {
-          setPopup(false);
-        }, 2100);
-        yes.current.removeAttribute("disabled");
-        no.current.removeAttribute("disabled");
-        setAgreeVisibility(false);
-        return;
-      }
-      if (data.message) {
-        setPopupData({ content: data.message, result: "message" });
-        setPopup(true);
-        setTimeout(() => {
-          setPopup(false);
-        }, 2100);
-      }
-      setExercises(exercises.filter((item) => item.name !== name));
-      setSearch(exercises.filter((item) => item.name !== name));
-      yes.current.removeAttribute("disabled");
-      no.current.removeAttribute("disabled");
-      setAgreeVisibility(false);
-    };
-    deleting();
-  }
 
   return (
     <section className="main__exList">
-      {popup && popupData && (
-        <Popup content={popupData.content} result={popupData.result} />
-      )}
       {exercises.map((item) => {
         return (
           <article className="main__exList--exTile" key={item.id}>
@@ -114,26 +58,12 @@ function ExerciseComp({ exercises, setExercises, setSearch }: ExerciseProps) {
             >
               <img src={edit} alt="edit icon" />
             </button>
-            <button
-              onClick={() => {
-                setModifiedItem(item);
-                setAgreeVisibility(!agreeVisibility);
-              }}
-              className="deleteButton"
-            >
+            <button onClick={() => {}} className="deleteButton">
               <img src={trash} alt="trash icon" />
             </button>
           </article>
         );
       })}
-      {agreeVisibility && (
-        <Agreement
-          onDelete={handleOnDelete}
-          visibility={setAgreeVisibility}
-          name={modifiedItem?.name}
-          id={undefined}
-        />
-      )}
       {editVisibility && (
         <ExEdit item={modifiedItem} setVisibility={setEditVisibility} />
       )}

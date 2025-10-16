@@ -40,7 +40,6 @@ function Workouts() {
       }
     });
     setData(newWorkoutList);
-    setSearch(newWorkoutList)
   }
   function handleWorkoutItemDelete(workoutId: number , workoutItemId: number){
     const newWorkoutList = data?.map((workout)=>{
@@ -52,7 +51,6 @@ function Workouts() {
       }
     })    
     setData(newWorkoutList)
-    setSearch(newWorkoutList)
   }
 
   function handleWorkoutAdd(newWorkout: WorkoutWithItems){
@@ -62,8 +60,8 @@ function Workouts() {
 
   function handleWorkoutDelete(id: number) {
     setData(data?.filter((item) => item.id !== id));
-    setSearch(data);
   }
+  
   return (
     <>
       {creatorVisibility && (
@@ -108,9 +106,7 @@ function Workouts() {
                 id={item.id}
                 descriptive_name={item.descriptive_name}
                 workout_items={item.workout_items}
-                handleUiUpdate={handleWorkoutDelete}
                 handleWorkoutItemAdd={handleWorkoutItemAdd}
-                handleWorkoutItemDeletion={handleWorkoutItemDelete}
               />
             );
           })}
