@@ -14,7 +14,5 @@ export function handleExercisesFetch(fetchedData: Exercise[]) {
       result.push(newEx);
     });
     return result
-  } else if (Error) {
-    console.log(Error);
   }
 }

@@ -14,7 +14,6 @@ interface WorkoutCompProps {
   descriptive_name: string | undefined;
   workout_items: WorkoutItem[];
   handleUiUpdate: (id:number)=>void;
-  showPopup: (content: string, result: "message" | "error") => void,
   handleWorkoutItemAdd: (workId: number, newItem : WorkoutItem) => void;
   handleWorkoutItemDeletion : (workoutId: number , workoutItemId: number) => void;
 }
@@ -23,7 +22,6 @@ function WorkoutComp({
   descriptive_name,
   workout_items,
   handleUiUpdate,
-  showPopup,
   handleWorkoutItemAdd,
   handleWorkoutItemDeletion
 }: WorkoutCompProps) {
@@ -60,13 +58,11 @@ function WorkoutComp({
       const response = await fetchDelete("workouts/delete", "8000", "id", id, descriptive_name);
       const result = await response;
       if(result.error){
-        showPopup(result.error, "error")
         console.log(result.error);
         return
       }
       if(result.message){
         console.log(result.message);
-        showPopup(result.message, "message")
       }
       handleUiUpdate(id)
       setAgreement(false)

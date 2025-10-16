@@ -1,5 +1,5 @@
 interface ExerciseBody{
-    "name"?:string,
+    "name":string,
     "description"?:string,
     "video"?:string,
     "comment"?:string

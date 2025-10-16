@@ -21,7 +21,6 @@ const useFetchGet = <T>(url: string, port: string) => {
       const getData = async () => {
         try {
           const response = await fetch(path, {
-            method: "GET",
             signal: abort.signal,
           });
           const result = await response.json();

@@ -1,36 +1,23 @@
-import { useEffect, useState } from "react";
 import "./styles/Workouts.scss";
+import { useEffect, useState } from "react";
+import type { WorkoutWithItems } from "./utils/WorkoutWithItems.ts";
 import { WorkoutItem } from "./utils/classes";
+import searchIcon from "./assets/search.svg";
 import WorkoutComp from "./WorkoutComp";
 import useFetchGet from "./hooks/useFetchGet";
-import searchIcon from "./assets/search.svg";
-import fetchPost from "./fetchers/fetchPost.ts";
-import type { popupData } from "./utils/popupData";
-import Popup from "./Popup.tsx";
 import patternSearch from "./utils/patternSearch.ts";
 import WorkoutCreator from "./WorkoutCreator.tsx";
-import type { WorkoutWithItems } from "./utils/WorkoutWithItems.ts";
 
 function Workouts() {
   const { data, setData, isLoading, Error } = useFetchGet<WorkoutWithItems>("workouts", "8000");
   const [search, setSearch] = useState<WorkoutWithItems[]>([]);
   const [creatorVisibility, setCreatorVisibility] = useState<boolean>(false);
-  const [popupData, setPopupData] = useState<popupData>();
-  const [popup, setPopup] = useState(false);
 
   useEffect(()=>{
     if(data){
       setSearch(data)
     }
   }, [data])
-
-  function handlePopup(content: string, result: "message" | "error") {
-    setPopupData({ content: content, result: result });
-    setPopup(true);
-    setTimeout(() => {
-      setPopup(false);
-    }, 2100);
-  }
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.value.trim() === "") {
@@ -68,44 +55,21 @@ function Workouts() {
     setSearch(newWorkoutList)
   }
 
-  async function handleWorkoutAdd(name: string) {
-    if (!name) return;
-    let newWorkout: WorkoutWithItems = {
-      id: -1,
-      descriptive_name: name,
-      workout_items: [],
-    };
-    const [id, result] = await fetchPost("workouts/", "8000", {
-      descriptive_name: name,
-    });
-    if (result.error) {
-      handlePopup(result.error, "error");
-      return;
-    }
-    newWorkout.id = id;
-    handlePopup(result.message, "message");
-    if (data) {
-      setData([...data, newWorkout]);
-      setSearch([...data, newWorkout]);
-    } else {
-      setData([newWorkout]);
-      setSearch([newWorkout]);
-    }
-    setCreatorVisibility(false);
+  function handleWorkoutAdd(newWorkout: WorkoutWithItems){
+    setData([...data, newWorkout])
+    setCreatorVisibility(false)
   }
+
   function handleWorkoutDelete(id: number) {
     setData(data?.filter((item) => item.id !== id));
     setSearch(data);
   }
   return (
     <>
-      {popup && popupData && (
-        <Popup content={popupData.content} result={popupData.result} />
-      )}
       {creatorVisibility && (
         <WorkoutCreator
-          handleOnAdd={handleWorkoutAdd}
           setVisibility={setCreatorVisibility}
+          udpateUI={handleWorkoutAdd}
         />
       )}
       <div className="main__inpFlex">
@@ -145,7 +109,6 @@ function Workouts() {
                 descriptive_name={item.descriptive_name}
                 workout_items={item.workout_items}
                 handleUiUpdate={handleWorkoutDelete}
-                showPopup={handlePopup}
                 handleWorkoutItemAdd={handleWorkoutItemAdd}
                 handleWorkoutItemDeletion={handleWorkoutItemDelete}
               />

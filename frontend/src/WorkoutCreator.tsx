@@ -1,15 +1,35 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
+import type { WorkoutWithItems } from './utils/WorkoutWithItems';
+import useFetchPost from './hooks/useFetchPost';
 
 interface WorkoutCreatorProps {
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
-  handleOnAdd: (name: string) => void;
+  udpateUI: (newItem: WorkoutWithItems) => void;
 }
-function WorkoutCreator({ setVisibility, handleOnAdd }: WorkoutCreatorProps) {
+function WorkoutCreator({ setVisibility, udpateUI }: WorkoutCreatorProps) {
+  const { returnedItem, loading, postError, setBody } = useFetchPost<any>('workouts', "8000")
   const [inputValue, setInputValue] = useState<string>("");
+
+
   const closeRef = useRef<HTMLButtonElement>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const placeholderRef = useRef<HTMLDivElement>(null)
+
+  useEffect(()=>{
+    if(postError){
+      console.log(postError);
+      return;
+    }
+    if(returnedItem !== undefined){
+      const newWorkout : WorkoutWithItems = {
+        id: returnedItem.id,
+        descriptive_name: returnedItem.descriptive_name,
+        workout_items: []
+      }
+      udpateUI(newWorkout);
+    }
+  }, [returnedItem, postError])
 
   function handleInputFocus(){
     if(placeholderRef.current !== null){
@@ -26,6 +46,7 @@ function WorkoutCreator({ setVisibility, handleOnAdd }: WorkoutCreatorProps) {
   }
   return (
     <>
+      {loading && "laduje sie"}
       <div className="workoutCreator-background"></div>
       <section className="workoutCreator">
         <button
@@ -56,14 +77,8 @@ function WorkoutCreator({ setVisibility, handleOnAdd }: WorkoutCreatorProps) {
         <div ref={placeholderRef} className="inputRelativePosition__placeholder">name</div>
         </div>
         <button
-          onClick={async () => {
-            if(!closeRef.current || !addRef.current || !inputRef.current){
-              return
-            }
-            closeRef.current.setAttribute("disabled", "")
-            addRef.current.setAttribute("disabled", "")
-            inputRef.current.setAttribute("disabled", "")
-            await handleOnAdd(inputValue.trim());
+          onClick={() => {
+           setBody({descriptive_name: inputValue})
           }}
           className="workoutCreator__add"
           ref={addRef}

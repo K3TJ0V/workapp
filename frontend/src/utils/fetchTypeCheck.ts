@@ -1,4 +1,4 @@
-import type { Exercise } from "./classes";
+import type { Exercise, Workout } from "./classes";
 import type { WorkoutWithItems } from "./WorkoutWithItems";
 
 export function fetchTypeCheck<T>(fetchedData: T[]) {
@@ -10,5 +10,7 @@ export function fetchTypeCheck<T>(fetchedData: T[]) {
     return "WorkoutWithItems";
   } else if ((fetchedData as Exercise[])[0].comment !== undefined) {
     return "Exercise";
+  } else if((fetchedData as Workout[])[0].descriptive_name !== undefined){
+    return "Workout"
   }
 }
